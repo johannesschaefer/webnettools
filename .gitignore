@@ -27,3 +27,5 @@ hs_err_pid*
 /src/main/frontend/node/
 /src/main/frontend/node_modules/
 webnettools.iml
+src/main/frontend/package-lock.json
+/src/main/frontend/public/build/

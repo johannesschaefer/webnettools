@@ -71,6 +71,63 @@
     </dependencies>
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>ca.szc.maven</groupId>
+                <artifactId>jsonpath-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <executions>
+                    <execution>
+                        <id>update-version</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>modify</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/src/main/frontend/package.json</file>
+                            <modifications>
+                                <modification>
+                                    <expression>$.version</expression>
+                                    <value>${project.version}</value>
+                                </modification>
+                            </modifications>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.3</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <prefix>git</prefix>
+                    <verbose>false</verbose>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.basedir}/src/main/frontend/git.json</generateGitPropertiesFilename>
+                    <format>json</format>
+                    <gitDescribe>
+                        <skip>false</skip>
+                        <always>false</always>
+                        <dirty>-dirty</dirty>
+                    </gitDescribe>
+                </configuration>
+            </plugin>
+
+
+
+
+
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>

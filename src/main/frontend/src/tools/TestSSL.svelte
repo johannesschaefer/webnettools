@@ -1,18 +1,21 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import type { ResultTask } from "../ResultTask";
+    import { TaskStatus } from "../TaskStatus";
 
-    let testSSLOption = { url: "", hints: true, fast: false };
+    let payload = { url: "", hints: true, fast: false };
 
     const dispatch = createEventDispatcher();
 
     function runTestSSL() {
         dispatch("createResult", <ResultTask>{
             active: true,
-            displayText: "new tasks " + testSSLOption.url,
-            payload: testSSLOption,
+            displayText: "Test SSL for " + payload.url,
+            payload: payload,
             url: "testssl",
             mode: "testssl",
+            date: new Date(),
+            status: TaskStatus.PREPARED,
         });
     }
 </script>
@@ -30,15 +33,17 @@
                         >
                     </div>
                     <input
-                        bind:value={testSSLOption.url}
+                        bind:value={payload.url}
                         type="text"
                         class="form-control"
                         placeholder="URL / Hostname"
                     />
                     <div class="input-group-append">
                         <button
+                            disabled={payload.url === ""}
+                            class:disabled={payload.url === ""}
                             on:click={runTestSSL}
-                            class="btn btn-outline-primary"
+                            class="btn btn-primary"
                             type="button"
                             id="button-addon2">Test SSL</button
                         >
@@ -49,7 +54,7 @@
                 <div class="col">
                     <div class="form-check">
                         <input
-                            bind:checked={testSSLOption.hints}
+                            bind:checked={payload.hints}
                             class="form-check-input"
                             type="checkbox"
                             id="flags-hints"
@@ -62,7 +67,7 @@
                 <div class="col">
                     <div class="form-check">
                         <input
-                            bind:checked={testSSLOption.fast}
+                            bind:checked={payload.fast}
                             class="form-check-input"
                             type="checkbox"
                             id="flags-fast"

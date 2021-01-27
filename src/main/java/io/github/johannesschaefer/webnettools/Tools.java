@@ -1,6 +1,7 @@
 package io.github.johannesschaefer.webnettools;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import io.github.johannesschaefer.webnettools.payload.PingPayload;
 import io.github.johannesschaefer.webnettools.payload.TestSSLPayload;
 import io.github.johannesschaefer.webnettools.payload.TraceroutePayload;
@@ -10,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.*;
+import java.util.List;
 
 @Path("/")
 public class Tools {
@@ -18,34 +20,51 @@ public class Tools {
     @POST
     @Path("ping")
     public Response ping(PingPayload payload) throws IOException {
-        if (payload == null || Strings.isNullOrEmpty( payload.getUrl())) {
+        if (payload == null || Strings.isNullOrEmpty(payload.getHost())) {
             return Response.serverError().build();
         }
         if (payload.getCount() == null) {
             payload.setCount(3);
         }
 
-        return getStreamResponse(new ProcessBuilder( "ping", "-c", ""+payload.getCount(), payload.getUrl() ));
+        List<String> cmd = Lists.newArrayList("ping");
+        cmd.add("-c");
+        cmd.add(String.valueOf(payload.getCount()));
+        cmd.add(payload.getHost());
+
+        return getStreamResponse(new ProcessBuilder(cmd.toArray(new String[0])));
     }
 
     @POST
     @Path("traceroute")
     public Response traceroute(TraceroutePayload payload) throws IOException {
-        if (payload == null || Strings.isNullOrEmpty( payload.getUrl())) {
+        if (payload == null || Strings.isNullOrEmpty(payload.getHost())) {
             return Response.serverError().build();
         }
 
-        return getStreamResponse(new ProcessBuilder( "traceroute", payload.getUrl() ));
+        List<String> cmd = Lists.newArrayList("traceroute");
+        cmd.add(payload.getHost());
+
+        return getStreamResponse(new ProcessBuilder(cmd.toArray(new String[0])));
     }
 
     @POST
     @Path("testssl")
     public Response testssl(TestSSLPayload payload) throws IOException {
-        if (payload == null || Strings.isNullOrEmpty( payload.getUrl())) {
+        if (payload == null || Strings.isNullOrEmpty(payload.getUrl())) {
             return Response.serverError().build();
         }
-        //return getStreamResponse(new ProcessBuilder( "pwd" ));
-        return getStreamResponse(new ProcessBuilder( "/testssl.sh-3.0.4/testssl.sh", "--hints", "--quiet", payload.getUrl() ));
+
+        List<String> cmd = Lists.newArrayList("/testssl.sh-3.0.4/testssl.sh");
+        if (payload.isHints()) {
+            cmd.add("--hints");
+        }
+        if (payload.isQuiet()) {
+            cmd.add("--quiet");
+        }
+        cmd.add(payload.getUrl());
+
+        return getStreamResponse(new ProcessBuilder(cmd.toArray(new String[0])));
     }
 
     private Response getStreamResponse(ProcessBuilder pb) throws IOException {
@@ -55,6 +74,7 @@ public class Tools {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
                 copyStream(p.getInputStream(), outputStream);
+                copyStream(p.getErrorStream(), outputStream);
             }
         };
 

@@ -25,7 +25,9 @@ hs_err_pid*
 /.idea/
 /target/
 /src/main/frontend/node/
+/src/main/frontend/.vscode/
 /src/main/frontend/node_modules/
 webnettools.iml
 src/main/frontend/package-lock.json
 /src/main/frontend/public/build/
+/src/main/frontend/public/vendor/

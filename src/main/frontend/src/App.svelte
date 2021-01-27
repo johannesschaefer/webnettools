@@ -1,4 +1,6 @@
 <script lang="ts">
+    import AppFooter from "./AppFooter.svelte";
+
     import Navigation from "./Navigation.svelte";
     import ResultList from "./ResultList.svelte";
     import type { ResultTask } from "./ResultTask";
@@ -16,21 +18,34 @@
 
     function addResult(event: CustomEvent<ResultTask>) {
         resultList2 = [event.detail, ...resultList2];
-        resultList2 = resultList2;
     }
 </script>
 
-<h1>Web Net Tools</h1>
-<div class="container-fluid">
-    <Navigation {mode} on:modeChanged={modeChanged} />
-    {#if mode === "testssl"}
-        <TestSsl on:createResult={addResult} />
-    {:else if mode === "ping"}
-        <Ping on:createResult={addResult} />
-    {:else if mode === "traceroute"}
-        <Traceroute on:createResult={addResult} />
-    {/if}
-</div>
-<div class="container-fluid" style="padding-top: 0.5em">
-    <ResultList bind:resultList={resultList2} />
-</div>
+<main role="main" class="container-fluid">
+    <h1>
+        <i class="bi bi-hdd-network" />
+        Web Net Tools
+    </h1>
+    <div class="container-fluid">
+        <Navigation {mode} on:modeChanged={modeChanged} />
+        {#if mode === "testssl"}
+            <TestSsl on:createResult={addResult} />
+        {:else if mode === "ping"}
+            <Ping on:createResult={addResult} />
+        {:else if mode === "traceroute"}
+            <Traceroute on:createResult={addResult} />
+        {/if}
+    </div>
+    <div class="container-fluid" style="padding-top: 0.5em">
+        <ResultList bind:resultList={resultList2} />
+    </div>
+</main>
+
+<AppFooter />
+
+<style>
+    h1 {
+        margin-left: 0.5em;
+        margin-top: 0.3em;
+    }
+</style>

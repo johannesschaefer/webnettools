@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class TraceroutePayload {
-    private String url;
+    private String host;
 }

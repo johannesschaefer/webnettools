@@ -8,6 +8,7 @@ import css from 'rollup-plugin-css-only';
 import sveltePreprocess from 'svelte-preprocess'
 import copy from 'rollup-plugin-copy'
 import autoPreprocess from 'svelte-preprocess';
+import json from '@rollup/plugin-json';
 
 
 const production = !process.env.ROLLUP_WATCH;
@@ -42,11 +43,25 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
+		json(),
 		copy({
 			targets: [{
 				src: 'node_modules/bootstrap/dist/**/*',
 				dest: 'public/vendor/bootstrap'
-			}, {
+			},
+			{
+				src: 'node_modules/bootstrap-icons/font/*.css',
+				dest: 'public/vendor/bootstrap-icons/font'
+			},
+			{
+				src: 'node_modules/bootstrap-icons/font/fonts/*',
+				dest: 'public/vendor/bootstrap-icons/font/fonts'
+			},
+			{
+				src: 'node_modules/bootstrap-icons/icons/*.svg',
+				dest: 'public/vendor/bootstrap-icons/icons'
+			},
+			{
 				src: 'node_modules/jquery/dist/**/*',
 				dest: 'public/vendor/jquery'
 			}]

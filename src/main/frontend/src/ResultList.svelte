@@ -3,13 +3,14 @@
     import type { ResultTask } from "./ResultTask";
 
     export let resultList: ResultTask[];
+    let id: string = "resultList";
 </script>
 
 {#if resultList.length != 0}
     <div class="card">
         <div class="">
-            <div class="accordion" id="accordionExample">
-                {#each resultList as r}
+            <div class="accordion" {id}>
+                {#each resultList as r (r.date)}
                     <Result bind:result={r} />
                 {/each}
             </div>
@@ -18,5 +19,7 @@
         </div>
     </div>
 {:else}
-    <div class="card">Please add an new entry.</div>
+    <div class="card text-muted p-2">
+        No results available. Please start one of the tools.
+    </div>
 {/if}

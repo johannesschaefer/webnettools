@@ -1,0 +1,26 @@
+
+{
+    "git.branch": "main",
+    "git.build.host": "Johannes-MBP.fritz.box",
+    "git.build.time": "2021-01-27T22:34:13+0100",
+    "git.build.user.email": "johannesschaefer@users.noreply.github.com",
+    "git.build.user.name": "johannesschaefer",
+    "git.build.version": "0.0.1-SNAPSHOT",
+    "git.closest.tag.commit.count": "",
+    "git.closest.tag.name": "",
+    "git.commit.id": "b8bfd82e4a06dce08e3a2b5fbdb3c852eaf99c6d",
+    "git.commit.id.abbrev": "b8bfd82",
+    "git.commit.id.describe": "b8bfd82-dirty",
+    "git.commit.id.describe-short": "b8bfd82-dirty",
+    "git.commit.message.full": "Merge branch 'main' of https://github.com/johannesschaefer/webnettools into main",
+    "git.commit.message.short": "Merge branch 'main' of https://github.com/johannesschaefer/webnettools into main",
+    "git.commit.time": "2021-01-24T00:32:30+0100",
+    "git.commit.user.email": "johannesschaefer@users.noreply.github.com",
+    "git.commit.user.name": "johannesschaefer",
+    "git.dirty": "true",
+    "git.local.branch.ahead": "0",
+    "git.local.branch.behind": "0",
+    "git.remote.origin.url": "https://github.com/johannesschaefer/webnettools.git",
+    "git.tags": "",
+    "git.total.commit.count": "6"
+}

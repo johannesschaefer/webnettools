@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class PingPayload {
-    private String url;
+    private String host;
     private Integer count;
 }

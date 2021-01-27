@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Path("/")
 public class Tools {
@@ -32,7 +33,7 @@ public class Tools {
         cmd.add(String.valueOf(payload.getCount()));
         cmd.add(payload.getHost());
 
-        return getStreamResponse(new ProcessBuilder(cmd.toArray(new String[0])));
+        return getStreamResponse(cmd);
     }
 
     @POST
@@ -45,7 +46,7 @@ public class Tools {
         List<String> cmd = Lists.newArrayList("traceroute");
         cmd.add(payload.getHost());
 
-        return getStreamResponse(new ProcessBuilder(cmd.toArray(new String[0])));
+        return getStreamResponse(cmd);
     }
 
     @POST
@@ -64,21 +65,12 @@ public class Tools {
         }
         cmd.add(payload.getUrl());
 
-        return getStreamResponse(new ProcessBuilder(cmd.toArray(new String[0])));
+        return getStreamResponse(cmd);
     }
 
-    private Response getStreamResponse(ProcessBuilder pb) throws IOException {
-        var p = pb.start();
-
-        StreamingOutput s = new StreamingOutput() {
-            @Override
-            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
-                copyStream(p.getInputStream(), outputStream);
-                copyStream(p.getErrorStream(), outputStream);
-            }
-        };
-
-        return Response.ok(s).build();
+    private Response getStreamResponse(List<String> cmd) throws IOException {
+        Process process = new ProcessBuilder().command(cmd).redirectErrorStream(true).start();
+        return Response.ok((StreamingOutput) outputStream -> copyStream(process.getInputStream(), outputStream)).build();
     }
 
     void copyStream(InputStream source, OutputStream target) throws IOException {

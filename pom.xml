@@ -71,7 +71,6 @@
     </dependencies>
     <build>
         <plugins>
-
             <plugin>
                 <groupId>ca.szc.maven</groupId>
                 <artifactId>jsonpath-maven-plugin</artifactId>
@@ -95,7 +94,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
@@ -123,11 +121,6 @@
                     </gitDescribe>
                 </configuration>
             </plugin>
-
-
-
-
-
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>

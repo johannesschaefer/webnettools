@@ -6,15 +6,12 @@
     let resultList: ResultTask[] = [];
 
     export function addResult(result: ResultTask) {
+        resultList.forEach((r) => (r.active = false));
         resultList = [result, ...resultList];
     }
 
     export function removeResult(result: ResultTask) {
-        const index = resultList.indexOf(result, 0);
-        if (index > -1) {
-            resultList.splice(index, 1);
-        }
-        resultList = resultList;
+        resultList = resultList.filter((r) => r !== result);
     }
 
     export function clearResults() {

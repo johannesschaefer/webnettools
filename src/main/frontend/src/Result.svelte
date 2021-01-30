@@ -18,7 +18,10 @@
 
     let displayText = "";
     let displayTextFormated = "";
+    let textarea;
     const ansi_up = new AnsiUp();
+    const controller = new AbortController();
+    const signal = controller.signal;
 
     function edit() {
         dispatch("edit", result);
@@ -38,6 +41,7 @@
     }
 
     function remove() {
+        controller.abort();
         dispatch("remove", result);
     }
 
@@ -46,25 +50,30 @@
         displayText = "";
         displayTextFormated = "";
         try {
-            const response = await fetch("/" + result.url, {
-                method: "POST",
-                body: JSON.stringify(result.payload),
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "text/plain",
-                },
-            });
+            const response = await fetch(
+                "http://localhost:8080/" + result.url,
+                {
+                    method: "POST",
+                    body: JSON.stringify(result.payload),
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "text/plain",
+                    },
+                    signal: signal,
+                }
+            );
 
             if (response.ok && response.body !== null) {
                 result.status = TaskStatus.RUNNING;
                 const reader = response.body
                     .pipeThrough(new TextDecoderStream())
                     .getReader();
-                while (true) {
+                while (true && result.status === TaskStatus.RUNNING) {
                     const { value, done } = await reader.read();
                     if (done) break;
                     displayText += value;
                     displayTextFormated = ansi_up.ansi_to_html(displayText);
+                    scrollToEnd();
                 }
             }
             if (!response.ok) {
@@ -78,11 +87,21 @@
         } finally {
         }
     });
+
+    function toggleVisibility() {
+        result.active = !result.active;
+        scrollToEnd();
+    }
+    function scrollToEnd() {
+        if (textarea !== null) {
+            textarea.scrollTop = textarea.scrollHeight;
+        }
+    }
 </script>
 
 <div class="card">
     <div
-        on:click={() => (result.active = !result.active)}
+        on:click={toggleVisibility}
         class="card-header d-flex flex-row"
         id="header-{id}"
         class:bg-success={result.status === TaskStatus.SUCCESS}
@@ -110,33 +129,68 @@
             style="margin-left: 1em; margin-top: 0.5em"
         >
             <div
-                class:spinner-border={result.status === TaskStatus.RUNNING}
+                class:spinner-border={result.status === TaskStatus.RUNNING ||
+                    result.status === TaskStatus.PREPARED}
                 role="status"
             >
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <div class="p-2 bd-highlight justify-content-end">
+        <div class="bd-highlight justify-content-end">
             <button class="btn" on:click|stopPropagation={edit}>
-                <i class="bi bi-pencil" />
+                <i class="bi bi-pencil" style="font-size: 1.3em" />
             </button>
             <button class="btn" on:click|stopPropagation={repeat}>
-                <i class="bi bi-arrow-repeat" />
+                <i class="bi bi-arrow-repeat" style="font-size: 1.3em" />
             </button>
             <button class="btn" on:click|stopPropagation={remove}>
-                <i class="bi bi-x" />
+                <i class="bi bi-x" style="font-size: 1.3em" />
             </button>
         </div>
     </div>
 
     {#if result.active}
-        <div transition:slide>
-            <div class="card-body">
+        <div transition:slide={{}} on:introend={scrollToEnd}>
+            <div
+                class="card-body"
+                style="padding-top 0px; padding-bottom: 0px;"
+            >
                 <pre
-                    style="overflow: scroll; max-height: 20em">
+                    class="overflow-scroll-gradient"
+                    bind:this={textarea}>
                 {@html displayTextFormated}
-            </pre>
+                </pre>
             </div>
         </div>
     {/if}
 </div>
+
+<style>
+    .overflow-scroll-gradient {
+        overflow: scroll;
+        max-height: 20em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+    .overflow-scroll-gradient::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 0.5em;
+        background: linear-gradient(
+            white,
+            rgba(255, 255, 255, 0.001)
+        ); /* transparent keyword is broken in Safari */
+    }
+    .overflow-scroll-gradient::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 0.5em;
+        background: linear-gradient(
+            rgba(255, 255, 255, 0.001),
+            white
+        ); /* transparent keyword is broken in Safari */
+    }
+</style>

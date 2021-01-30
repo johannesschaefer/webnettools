@@ -9,6 +9,7 @@ import sveltePreprocess from 'svelte-preprocess'
 import copy from 'rollup-plugin-copy'
 import autoPreprocess from 'svelte-preprocess';
 import json from '@rollup/plugin-json';
+import replace from '@rollup/plugin-replace';
 
 
 const production = !process.env.ROLLUP_WATCH;
@@ -65,6 +66,9 @@ export default {
 				src: 'node_modules/jquery/dist/**/*',
 				dest: 'public/vendor/jquery'
 			}]
+		}),
+		replace({
+			__URL__: production ? "/" : "http://localhost:8080/",
 		}),
 		svelte({
 			preprocess: autoPreprocess(),

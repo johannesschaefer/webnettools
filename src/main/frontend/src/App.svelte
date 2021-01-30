@@ -8,11 +8,8 @@
     import Traceroute from "./tools/Traceroute.svelte";
 
     let currentComponent;
-
     let mode = "testssl";
-
     let props;
-
     let resultListComponent: ResultList;
 
     function modeChanged(evMode: string) {

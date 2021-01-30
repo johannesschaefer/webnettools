@@ -14,7 +14,7 @@
     export let result: ResultTask;
     //export let parentList: ResultList;
     let id: string = uuidv4();
-    let collapseId: string = uuidv4();
+    let statusVisible: boolean = true;
 
     let displayText = "";
     let displayTextFormated = "";
@@ -41,8 +41,13 @@
     }
 
     function remove() {
-        controller.abort();
+        cancelRequest();
         dispatch("remove", result);
+    }
+
+    function cancelRequest() {
+        controller.abort();
+        result.status = TaskStatus.CANCELED;
     }
 
     onMount(async () => {
@@ -50,18 +55,15 @@
         displayText = "";
         displayTextFormated = "";
         try {
-            const response = await fetch(
-                "http://localhost:8080/" + result.url,
-                {
-                    method: "POST",
-                    body: JSON.stringify(result.payload),
-                    headers: {
-                        "Content-Type": "application/json",
-                        Accept: "text/plain",
-                    },
-                    signal: signal,
-                }
-            );
+            const response = await fetch("__URL__" + result.url, {
+                method: "POST",
+                body: JSON.stringify(result.payload),
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "text/plain",
+                },
+                signal: signal,
+            });
 
             if (response.ok && response.body !== null) {
                 result.status = TaskStatus.RUNNING;
@@ -83,7 +85,7 @@
             }
         } catch (e) {
             result.status = TaskStatus.ERROR;
-            displayTextFormated = e;
+            displayTextFormated += "\n" + e;
         } finally {
         }
     });
@@ -128,13 +130,26 @@
             class="p-2 bd-highlight flex-grow-1 justify-content-end"
             style="margin-left: 1em; margin-top: 0.5em"
         >
-            <div
-                class:spinner-border={result.status === TaskStatus.RUNNING ||
-                    result.status === TaskStatus.PREPARED}
-                role="status"
-            >
-                <span class="sr-only">Loading...</span>
-            </div>
+            {#if statusVisible}
+                <div
+                    on:mouseenter={() => (statusVisible = false)}
+                    on:mouseleave={() => (statusVisible = true)}
+                    class:spinner-border={result.status ===
+                        TaskStatus.RUNNING ||
+                        result.status === TaskStatus.PREPARED}
+                    role="status"
+                >
+                    <span class="sr-only">Loading...</span>
+                </div>
+            {:else}
+                <i
+                    on:mouseenter={() => (statusVisible = false)}
+                    on:mouseleave={() => (statusVisible = true)}
+                    on:click|stopPropagation={cancelRequest}
+                    class="bi bi-x"
+                    style="font-size: 1.3em"
+                />
+            {/if}
         </div>
         <div class="bd-highlight justify-content-end">
             <button class="btn" on:click|stopPropagation={edit}>

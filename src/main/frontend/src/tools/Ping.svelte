@@ -2,8 +2,10 @@
     import { createEventDispatcher } from "svelte";
     import type { ResultTask } from "../ResultTask";
     import { TaskStatus } from "../TaskStatus";
+    import { slide } from "svelte/transition";
 
     export let payload = { host: "", count: 5, wait: 1 };
+    let showOptions: boolean = false;
 
     const dispatch = createEventDispatcher();
 
@@ -29,7 +31,10 @@
             <div class="row">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="ping-host"> ? </span>
+                        <span
+                            class="input-group-text bi bi-question-circle"
+                            id="ping-host"
+                        />
                     </div>
                     <input
                         bind:value={payload.host}
@@ -51,60 +56,70 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <label for="ping-count">Count</label>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="ping-count">
-                                ?
-                            </span>
-                        </div>
-                        <input
-                            type="number"
-                            min="1"
-                            max="100"
-                            step="1"
-                            class="form-control"
-                            placeholder="Count"
-                            aria-label="Count"
-                            aria-describedby="ping-count"
-                            bind:value={payload.count}
-                        />
-                    </div>
-                </div>
-                <div class="col">
-                    <label for="ping-wait">Wait</label>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="ping-wait">
-                                ?
-                            </span>
-                        </div>
-                        <input
-                            type="number"
-                            min="1"
-                            max="100"
-                            step="1"
-                            class="form-control"
-                            placeholder="Wait"
-                            aria-label="Wait"
-                            aria-describedby="ping-wait"
-                            bind:value={payload.wait}
-                        />
-                    </div>
-                </div>
+            <div
+                class="row text-secondary"
+                on:click={() => {
+                    showOptions = !showOptions;
+                }}
+                style="font-size: 0.9em;"
+            >
+                <i
+                    class="bi"
+                    class:bi-caret-right-fill={!showOptions}
+                    class:bi-caret-down-fill={showOptions}
+                    style="margin-right: 1em"
+                />
+                Options
             </div>
+
+            {#if showOptions}
+                <div class="row" in:slide={{}} out:slide={{}}>
+                    <div class="col">
+                        <label for="ping-count">Count</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span
+                                    class="input-group-text bi bi-question-circle"
+                                    id="ping-count"
+                                />
+                            </div>
+                            <input
+                                type="number"
+                                min="1"
+                                max="100"
+                                step="1"
+                                class="form-control"
+                                placeholder="Count"
+                                aria-label="Count"
+                                aria-describedby="ping-count"
+                                bind:value={payload.count}
+                            />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label for="ping-wait">Wait</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span
+                                    class="input-group-text bi bi-question-circle"
+                                    id="ping-wait"
+                                />
+                            </div>
+                            <input
+                                type="number"
+                                min="1"
+                                max="100"
+                                step="1"
+                                class="form-control"
+                                placeholder="Wait"
+                                aria-label="Wait"
+                                aria-describedby="ping-wait"
+                                bind:value={payload.wait}
+                            />
+                        </div>
+                    </div>
+                </div>
+            {/if}
         </form>
     </div>
 </div>
-
-<style>
-    .tab-pane {
-        border-left: 1px solid #ddd;
-        border-right: 1px solid #ddd;
-        border-bottom: 1px solid #ddd;
-        border-radius: 0px 0px 5px 5px;
-        padding: 10px;
-    }
-</style>

@@ -5,7 +5,7 @@
     import { slide } from "svelte/transition";
 
     export let payload = { url: "", hints: true, fast: false };
-    let showOptions = false;
+    let showOptions: boolean = false;
 
     const dispatch = createEventDispatcher();
 
@@ -31,9 +31,10 @@
             <div class="row">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="testssl-url">
-                            ?
-                        </span>
+                        <span
+                            class="input-group-text bi bi-question-circle"
+                            id="testssl-url"
+                        />
                     </div>
                     <!-- svelte-ignore a11y-autofocus -->
                     <input
@@ -84,6 +85,10 @@
                             <label class="form-check-label" for="flags-hints">
                                 Hints
                             </label>
+                            <i
+                                class="bi bi-question-circle pl-2"
+                                style="color: #495057"
+                            />
                         </div>
                     </div>
                     <div class="col">
@@ -97,6 +102,10 @@
                             <label class="form-check-label" for="flags-fast">
                                 Fast
                             </label>
+                            <i
+                                class="bi bi-question-circle pl-2"
+                                style="color: #495057"
+                            />
                         </div>
                     </div>
                 </div>
@@ -104,13 +113,3 @@
         </form>
     </div>
 </div>
-
-<style>
-    .tab-pane {
-        border-left: 1px solid #ddd;
-        border-right: 1px solid #ddd;
-        border-bottom: 1px solid #ddd;
-        border-radius: 0px 0px 5px 5px;
-        padding: 10px;
-    }
-</style>

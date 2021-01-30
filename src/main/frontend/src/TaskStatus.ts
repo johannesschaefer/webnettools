@@ -4,5 +4,6 @@ export enum TaskStatus {
     RUNNING,
     SUCCESS,
     ERROR,
+    CANCELED,
     REMOVED
 }

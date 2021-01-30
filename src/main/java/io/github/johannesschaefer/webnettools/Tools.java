@@ -11,9 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Path("/")
 public class Tools {

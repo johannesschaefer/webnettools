@@ -3,11 +3,11 @@
     import type { ResultTask } from "../ResultTask";
     import { TaskStatus } from "../TaskStatus";
 
-    let payload = { host: "" };
+    export let payload = { host: "" };
 
     const dispatch = createEventDispatcher();
 
-    function runTraceroute() {
+    function runTask() {
         dispatch("createResult", <ResultTask>{
             active: true,
             displayText: "Trace Route to " + payload.host,
@@ -22,18 +22,20 @@
 
 <div class="tab-pane">
     <div class="card-body">
-        <form>
+        <form
+            on:submit|preventDefault={() =>
+                payload.host !== "" ? runTask() : null}
+        >
             <div class="row">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <button
-                            class="btn btn-outline-secondary"
-                            type="button"
-                            id="button-addon1">?</button
-                        >
+                        <span class="input-group-text" id="traceroute-host">
+                            ?
+                        </span>
                     </div>
                     <input
                         bind:value={payload.host}
+                        autofocus
                         type="text"
                         class="form-control"
                         placeholder="IP / Hostname"
@@ -42,10 +44,11 @@
                         <button
                             disabled={payload.host === ""}
                             class:disabled={payload.host === ""}
-                            on:click={runTraceroute}
+                            on:click={runTask}
+                            on:submit={runTask}
                             class="btn btn-primary"
                             type="button"
-                            id="button-addon2">Run Trace Route</button
+                            id="submit-traceroute">Run Trace Route</button
                         >
                     </div>
                 </div>

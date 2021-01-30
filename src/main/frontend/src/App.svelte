@@ -1,6 +1,5 @@
 <script lang="ts">
     import AppFooter from "./AppFooter.svelte";
-
     import Navigation from "./Navigation.svelte";
     import ResultList from "./ResultList.svelte";
     import type { ResultTask } from "./ResultTask";
@@ -8,16 +7,34 @@
     import TestSsl from "./tools/TestSSL.svelte";
     import Traceroute from "./tools/Traceroute.svelte";
 
+    let currentComponent;
+
     let mode = "testssl";
 
-    let resultList2: ResultTask[] = [];
+    let props;
 
-    function modeChanged(event: CustomEvent<string>) {
-        mode = event.detail;
+    let resultListComponent: ResultList;
+
+    function modeChanged(evMode: string) {
+        mode = evMode;
+        if (mode === "testssl") {
+            currentComponent = TestSsl;
+        } else if (mode === "ping") {
+            currentComponent = Ping;
+        } else if (mode === "traceroute") {
+            currentComponent = Traceroute;
+        }
+        props = {};
     }
+    modeChanged(mode);
 
     function addResult(event: CustomEvent<ResultTask>) {
-        resultList2 = [event.detail, ...resultList2];
+        resultListComponent.addResult(event.detail);
+    }
+
+    function edit(result: ResultTask) {
+        modeChanged(result.mode);
+        props = { payload: result.payload };
     }
 </script>
 
@@ -27,17 +44,18 @@
         Web Net Tools
     </h1>
     <div class="container-fluid">
-        <Navigation {mode} on:modeChanged={modeChanged} />
-        {#if mode === "testssl"}
-            <TestSsl on:createResult={addResult} />
-        {:else if mode === "ping"}
-            <Ping on:createResult={addResult} />
-        {:else if mode === "traceroute"}
-            <Traceroute on:createResult={addResult} />
-        {/if}
+        <Navigation {mode} on:modeChanged={(ev) => modeChanged(ev.detail)} />
+        <svelte:component
+            this={currentComponent}
+            {...props}
+            on:createResult={addResult}
+        />
     </div>
     <div class="container-fluid" style="padding-top: 0.5em">
-        <ResultList bind:resultList={resultList2} />
+        <ResultList
+            bind:this={resultListComponent}
+            on:edit={(ev) => edit(ev.detail)}
+        />
     </div>
 </main>
 

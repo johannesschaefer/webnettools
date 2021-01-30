@@ -3,11 +3,11 @@
     import type { ResultTask } from "../ResultTask";
     import { TaskStatus } from "../TaskStatus";
 
-    let payload = { host: "", count: 5 };
+    export let payload = { host: "", count: 5, wait: 1 };
 
     const dispatch = createEventDispatcher();
 
-    function runPing() {
+    function runTask() {
         dispatch("createResult", <ResultTask>{
             active: true,
             displayText: "Ping to " + payload.host,
@@ -22,18 +22,18 @@
 
 <div class="tab-pane">
     <div class="card-body">
-        <form>
+        <form
+            on:submit|preventDefault={() =>
+                payload.host !== "" ? runTask() : null}
+        >
             <div class="row">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <button
-                            class="btn btn-outline-secondary"
-                            type="button"
-                            id="button-addon1">?</button
-                        >
+                        <span class="input-group-text" id="ping-host"> ? </span>
                     </div>
                     <input
                         bind:value={payload.host}
+                        autofocus
                         type="text"
                         class="form-control"
                         placeholder="IP / Hostname"
@@ -42,17 +42,58 @@
                         <button
                             disabled={payload.host === ""}
                             class:disabled={payload.host === ""}
-                            on:click={runPing}
+                            on:click={runTask}
+                            on:submit={runTask}
                             class="btn btn-primary"
                             type="button"
-                            id="button-addon2">Run Ping</button
+                            id="submit-ping">Run Ping</button
                         >
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col" />
-                <div class="col" />
+                <div class="col">
+                    <label for="ping-count">Count</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="ping-count">
+                                ?
+                            </span>
+                        </div>
+                        <input
+                            type="number"
+                            min="1"
+                            max="100"
+                            step="1"
+                            class="form-control"
+                            placeholder="Count"
+                            aria-label="Count"
+                            aria-describedby="ping-count"
+                            bind:value={payload.count}
+                        />
+                    </div>
+                </div>
+                <div class="col">
+                    <label for="ping-wait">Wait</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="ping-wait">
+                                ?
+                            </span>
+                        </div>
+                        <input
+                            type="number"
+                            min="1"
+                            max="100"
+                            step="1"
+                            class="form-control"
+                            placeholder="Wait"
+                            aria-label="Wait"
+                            aria-describedby="ping-wait"
+                            bind:value={payload.wait}
+                        />
+                    </div>
+                </div>
             </div>
         </form>
     </div>

@@ -1,14 +1,18 @@
 <script lang="ts">
     import { default as AnsiUp } from "ansi_up";
     import { v4 as uuidv4 } from "uuid";
-    import { onMount } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import type { ResultTask } from "./ResultTask";
     import { TaskStatus } from "./TaskStatus";
     import moment from "moment";
     import { slide } from "svelte/transition";
+
+    const dispatch = createEventDispatcher();
+
     moment.locale();
 
     export let result: ResultTask;
+    //export let parentList: ResultList;
     let id: string = uuidv4();
     let collapseId: string = uuidv4();
 
@@ -17,15 +21,24 @@
     const ansi_up = new AnsiUp();
 
     function edit() {
-        console.log("edit");
+        dispatch("edit", result);
     }
 
     function repeat() {
-        console.log("repeat");
+        let newResult: ResultTask = {
+            active: true,
+            date: new Date(),
+            displayText: result.displayText,
+            mode: result.mode,
+            status: TaskStatus.PREPARED,
+            url: result.url,
+            payload: result.payload,
+        };
+        dispatch("repeat", newResult);
     }
 
     function remove() {
-        console.log("remove");
+        dispatch("remove", result);
     }
 
     onMount(async () => {
@@ -33,17 +46,14 @@
         displayText = "";
         displayTextFormated = "";
         try {
-            const response = await fetch(
-                "http://localhost:8080/" + result.url,
-                {
-                    method: "POST",
-                    body: JSON.stringify(result.payload),
-                    headers: {
-                        "Content-Type": "application/json",
-                        Accept: "text/plain",
-                    },
-                }
-            );
+            const response = await fetch("/" + result.url, {
+                method: "POST",
+                body: JSON.stringify(result.payload),
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "text/plain",
+                },
+            });
 
             if (response.ok && response.body !== null) {
                 result.status = TaskStatus.RUNNING;

@@ -10,29 +10,27 @@
     }
 </script>
 
+<!-- svelte-ignore a11y-missing-attribute -->
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
         <a
             class="nav-link"
             class:active={mode === "testssl"}
-            on:click={() => changeMode("testssl")}
-            href="#testssl">Test SSL</a
+            on:click={() => changeMode("testssl")}>Test SSL</a
         >
     </li>
     <li class="nav-item" role="presentation">
         <a
             class="nav-link"
             class:active={mode === "ping"}
-            on:click={() => changeMode("ping")}
-            href="#ping">Ping</a
+            on:click={() => changeMode("ping")}>Ping</a
         >
     </li>
     <li class="nav-item" role="presentation">
         <a
             class="nav-link"
             class:active={mode === "traceroute"}
-            on:click={() => changeMode("traceroute")}
-            href="#traceroute">Trace Route</a
+            on:click={() => changeMode("traceroute")}>Trace Route</a
         >
     </li>
 </ul>

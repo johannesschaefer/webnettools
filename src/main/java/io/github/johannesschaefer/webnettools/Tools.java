@@ -11,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -27,10 +28,27 @@ public class Tools {
         if (payload.getCount() == null) {
             payload.setCount(3);
         }
+        if (payload.getCount() < 1) {
+            payload.setCount(1);
+        }
+        if (payload.getCount()> 100) {
+            payload.setCount(100);
+        }
+        if (payload.getCount() == null) {
+            payload.setWait(1.);
+        }
+        if(payload.getWait()< 0.1) {
+            payload.setWait(0.1);
+        }
+        if(payload.getWait()>60.) {
+            payload.setWait(60.);
+        }
 
         List<String> cmd = Lists.newArrayList("ping");
         cmd.add("-c");
         cmd.add(String.valueOf(payload.getCount()));
+        cmd.add("-i");
+        cmd.add(String.valueOf(payload.getWait()));
         cmd.add(payload.getHost());
 
         return getStreamResponse(cmd);

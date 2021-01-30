@@ -2,12 +2,14 @@
     import { createEventDispatcher } from "svelte";
     import type { ResultTask } from "../ResultTask";
     import { TaskStatus } from "../TaskStatus";
+    import { slide } from "svelte/transition";
 
-    let payload = { url: "", hints: true, fast: false };
+    export let payload = { url: "", hints: true, fast: false };
+    let showOptions = false;
 
     const dispatch = createEventDispatcher();
 
-    function runTestSSL() {
+    function runTask() {
         dispatch("createResult", <ResultTask>{
             active: true,
             displayText: "Test SSL for " + payload.url,
@@ -22,18 +24,21 @@
 
 <div class="tab-pane">
     <div class="card-body">
-        <form>
+        <form
+            on:submit|preventDefault={() =>
+                payload.url !== "" ? runTask() : null}
+        >
             <div class="row">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <button
-                            class="btn btn-outline-secondary"
-                            type="button"
-                            id="button-addon1">?</button
-                        >
+                        <span class="input-group-text" id="testssl-url">
+                            ?
+                        </span>
                     </div>
+                    <!-- svelte-ignore a11y-autofocus -->
                     <input
                         bind:value={payload.url}
+                        autofocus
                         type="text"
                         class="form-control"
                         placeholder="URL / Hostname"
@@ -42,42 +47,60 @@
                         <button
                             disabled={payload.url === ""}
                             class:disabled={payload.url === ""}
-                            on:click={runTestSSL}
+                            on:click={runTask}
                             class="btn btn-primary"
                             type="button"
-                            id="button-addon2">Test SSL</button
+                            id="submit-test-ssl">Test SSL</button
                         >
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div class="form-check">
-                        <input
-                            bind:checked={payload.hints}
-                            class="form-check-input"
-                            type="checkbox"
-                            id="flags-hints"
-                        />
-                        <label class="form-check-label" for="flags-hints">
-                            Hints
-                        </label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-check">
-                        <input
-                            bind:checked={payload.fast}
-                            class="form-check-input"
-                            type="checkbox"
-                            id="flags-fast"
-                        />
-                        <label class="form-check-label" for="flags-fast">
-                            Fast
-                        </label>
-                    </div>
-                </div>
+            <div
+                class="row text-secondary"
+                on:click={() => {
+                    showOptions = !showOptions;
+                }}
+                style="font-size: 0.9em;"
+            >
+                <i
+                    class="bi"
+                    class:bi-caret-right-fill={!showOptions}
+                    class:bi-caret-down-fill={showOptions}
+                    style="margin-right: 1em"
+                />
+                Options
             </div>
+
+            {#if showOptions}
+                <div class="row" in:slide={{}} out:slide={{}}>
+                    <div class="col">
+                        <div class="form-check">
+                            <input
+                                bind:checked={payload.hints}
+                                class="form-check-input"
+                                type="checkbox"
+                                id="flags-hints"
+                            />
+                            <label class="form-check-label" for="flags-hints">
+                                Hints
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check">
+                            <input
+                                bind:checked={payload.fast}
+                                class="form-check-input"
+                                type="checkbox"
+                                id="flags-fast"
+                            />
+                            <label class="form-check-label" for="flags-fast">
+                                Fast
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            {/if}
         </form>
     </div>
 </div>

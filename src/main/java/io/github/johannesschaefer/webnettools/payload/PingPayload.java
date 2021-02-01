@@ -5,7 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class PingPayload {
+public class PingPayload implements Payload {
     private String host;
     private Integer count;
     private Double wait;

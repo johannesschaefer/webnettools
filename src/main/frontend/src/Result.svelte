@@ -55,7 +55,7 @@
         displayText = "";
         displayTextFormated = "";
         try {
-            const response = await fetch("__URL__" + result.url, {
+            const response = await fetch("__URL__" + "tools/" + result.url, {
                 method: "POST",
                 body: JSON.stringify(result.payload),
                 headers: {

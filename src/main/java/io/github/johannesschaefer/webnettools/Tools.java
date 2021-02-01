@@ -2,6 +2,7 @@ package io.github.johannesschaefer.webnettools;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import io.github.johannesschaefer.webnettools.payload.NmapPayload;
 import io.github.johannesschaefer.webnettools.payload.PingPayload;
 import io.github.johannesschaefer.webnettools.payload.TestSSLPayload;
 import io.github.johannesschaefer.webnettools.payload.TraceroutePayload;
@@ -13,9 +14,16 @@ import javax.ws.rs.core.StreamingOutput;
 import java.io.*;
 import java.util.List;
 
-@Path("/")
+@Path("/tools/")
 public class Tools {
     private static final Logger LOG = Logger.getLogger(Tools.class);
+
+    @POST
+    @Path("nmap")
+    public Response nmap(NmapPayload payload) throws IOException {
+        List<String> cmd = Lists.newArrayList("nmap");
+        return getStreamResponse(cmd);
+    }
 
     @POST
     @Path("ping")
@@ -72,7 +80,7 @@ public class Tools {
             return Response.serverError().build();
         }
 
-        List<String> cmd = Lists.newArrayList("/testssl.sh-3.0.4/testssl.sh");
+        List<String> cmd = Lists.newArrayList("testssl.sh");
         if (payload.isHints()) {
             cmd.add("--hints");
         }

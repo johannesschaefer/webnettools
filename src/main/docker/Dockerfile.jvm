@@ -28,7 +28,7 @@ ARG RUN_JAVA_VERSION=1.3.8
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 # Install java and the run-java script
 # Also set up permissions for user `1001`
-RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certificates ${JAVA_PACKAGE} \
+RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certificates tar nmap ${JAVA_PACKAGE} \
     && microdnf update \
     && microdnf clean all \
     && mkdir /deployments \
@@ -38,13 +38,17 @@ RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certi
     && curl https://repo1.maven.org/maven2/io/fabric8/run-java-sh/${RUN_JAVA_VERSION}/run-java-sh-${RUN_JAVA_VERSION}-sh.sh -o /deployments/run-java.sh \
     && chown 1001 /deployments/run-java.sh \
     && chmod 540 /deployments/run-java.sh \
-    && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security
+    && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security \
+    && mkdir testssl.sh \
+    && cd testssl.sh \
+    && curl -L https://github.com/drwetter/testssl.sh/archive/3.0.4.tar.gz | tar xvz --strip-components=1
+
+ENV PATH=/testssl.sh:$PATH
 
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 COPY target/lib/* /deployments/lib/
 COPY target/*-runner.jar /deployments/app.jar
-ADD src/main/testssl/testssl.sh-3.0.4.tar.gz /
 
 EXPOSE 8080
 USER 1001

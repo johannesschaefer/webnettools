@@ -80,6 +80,9 @@
             }
             if (!response.ok) {
                 result.status = TaskStatus.ERROR;
+                var div = document.createElement("div"); // TODO: improve me
+                div.innerHTML = await response.text();
+                displayTextFormated = div.textContent || div.innerText || "";
             } else {
                 result.status = TaskStatus.SUCCESS;
             }

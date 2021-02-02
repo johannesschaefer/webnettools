@@ -1,11 +1,18 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import type { ResultTask } from "../ResultTask";
     import { TaskStatus } from "../TaskStatus";
     import { slide } from "svelte/transition";
 
     export let payload = { url: "", hints: true, fast: false };
+    export const name = "testssl";
+
     let showOptions: boolean = false;
+    let inputField;
+
+    onMount(async () => {
+        inputField.focus();
+    });
 
     const dispatch = createEventDispatcher();
 
@@ -24,6 +31,10 @@
 
 <div class="tab-pane">
     <div class="card-body">
+        <p class="text-secondary infotext">
+            Check the support of SSL/TLS of any server. Uses the
+            <a href="https://testssl.sh">testssl.sh</a> tooling.
+        </p>
         <form
             on:submit|preventDefault={() =>
                 payload.url !== "" ? runTask() : null}
@@ -36,10 +47,9 @@
                             id="testssl-url"
                         />
                     </div>
-                    <!-- svelte-ignore a11y-autofocus -->
                     <input
                         bind:value={payload.url}
-                        autofocus
+                        bind:this={inputField}
                         type="text"
                         class="form-control"
                         placeholder="URL / Hostname"

@@ -21,8 +21,9 @@
 # docker run -i --rm -p 8080:8080 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/testssl-webui-jvm
 #
 ###
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3 
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3
 
+ARG TESTSSL_VERSION
 ARG JAVA_PACKAGE=java-11-openjdk-headless
 ARG RUN_JAVA_VERSION=1.3.8
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
@@ -41,7 +42,7 @@ RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certi
     && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security \
     && mkdir testssl.sh \
     && cd testssl.sh \
-    && curl -L https://github.com/drwetter/testssl.sh/archive/3.0.4.tar.gz | tar xvz --strip-components=1
+    && curl -L https://github.com/drwetter/testssl.sh/archive/${TESTSSL_VERSION}.tar.gz | tar xvz --strip-components=1
 
 ENV PATH=/testssl.sh:$PATH
 

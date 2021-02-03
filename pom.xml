@@ -18,7 +18,8 @@
         <quarkus-plugin.version>1.11.0.Final</quarkus-plugin.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-        <Dquarkus.container-image.build>true</Dquarkus.container-image.build>
+        <quarkus.container-image.build>true</quarkus.container-image.build>
+        <quarkus.docker.build-args.TESTSSL_VERSION>3.0.4</quarkus.docker.build-args.TESTSSL_VERSION>
     </properties>
     <dependencyManagement>
         <dependencies>

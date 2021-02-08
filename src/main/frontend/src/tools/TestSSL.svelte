@@ -3,8 +3,9 @@
     import type { ResultTask } from "../ResultTask";
     import { TaskStatus } from "../TaskStatus";
     import { slide } from "svelte/transition";
+    import { tooltips } from "../tooltips";
 
-    export let payload = { url: "", hints: true, fast: false };
+    export let payload = { url: "", hints: true, quiet: false };
     export const name = "testssl";
 
     let showOptions: boolean = false;
@@ -43,6 +44,9 @@
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span
+                            use:tooltips
+                            data-toggle="tooltip"
+                            title="URI can be a hostname, an IPv4 or IPv6 address (restriction see below) or an URL. IPv6 addresses need to be in square brackets. For any given parameter port 443 is assumed unless specified by appending a colon and a port number. The only preceding protocol specifier allowed is https. You need to be aware that checks for an IP address might not hit the vhost you want. DNS resolution (A/AAAA record) is being performed unless you have an /etc/hosts entry for the hostname."
                             class="input-group-text bi bi-question-circle"
                             id="testssl-url"
                         />
@@ -96,6 +100,10 @@
                                 Hints
                             </label>
                             <i
+                                use:tooltips
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="This option is not in use yet. This option is meant to give hints how to fix a finding or at least a help to improve something. GIVE_HINTS is the environment variable for this."
                                 class="bi bi-question-circle pl-2"
                                 style="color: #495057"
                             />
@@ -104,15 +112,19 @@
                     <div class="col">
                         <div class="form-check">
                             <input
-                                bind:checked={payload.fast}
+                                bind:checked={payload.quiet}
                                 class="form-check-input"
                                 type="checkbox"
-                                id="flags-fast"
+                                id="flags-quiet"
                             />
-                            <label class="form-check-label" for="flags-fast">
-                                Fast
+                            <label class="form-check-label" for="flags-quiet">
+                                Quiet
                             </label>
                             <i
+                                use:tooltips
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Normally testssl.sh displays a banner on stdout with several version information, usage rights and a warning. This option suppresses it. Please note that by choosing this option you acknowledge usage terms and the warning normally appearing in the banner."
                                 class="bi bi-question-circle pl-2"
                                 style="color: #495057"
                             />

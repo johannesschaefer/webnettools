@@ -21,7 +21,12 @@ public class Tools {
     @POST
     @Path("nmap")
     public Response nmap(NmapPayload payload) throws IOException {
+        if (payload == null || Strings.isNullOrEmpty(payload.getHost())) {
+            return Response.serverError().build();
+        }
+
         List<String> cmd = Lists.newArrayList("nmap");
+        cmd.add(payload.getHost());
         return getStreamResponse(cmd);
     }
 

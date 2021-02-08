@@ -10,6 +10,6 @@ import java.io.IOException;
 public class Config {
     @GET
     public ToolConfiguration config() throws IOException {
-        return new ToolConfiguration(Lists.newArrayList("testssl", "ping", "traceroute"));
+        return new ToolConfiguration(Lists.newArrayList("testssl", "ping", "traceroute", "nmap"));
     }
 }

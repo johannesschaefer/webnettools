@@ -1,6 +1,5 @@
 <script lang="ts">
     import { default as AnsiUp } from "ansi_up";
-    import { v4 as uuidv4 } from "uuid";
     import { createEventDispatcher, onMount } from "svelte";
     import type { ResultTask } from "./ResultTask";
     import { TaskStatus } from "./TaskStatus";
@@ -12,8 +11,6 @@
     moment.locale();
 
     export let result: ResultTask;
-    //export let parentList: ResultList;
-    let id: string = uuidv4();
     let statusVisible: boolean = true;
 
     let displayText = "";
@@ -108,7 +105,6 @@
     <div
         on:click={toggleVisibility}
         class="card-header d-flex flex-row"
-        id="header-{id}"
         class:bg-success={result.status === TaskStatus.SUCCESS}
         class:bg-danger={result.status === TaskStatus.ERROR}
         class:bg-info={result.status === TaskStatus.RUNNING}

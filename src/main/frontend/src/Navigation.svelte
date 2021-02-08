@@ -33,6 +33,16 @@
         </li>
     {/if}
 
+    {#if availableTools.indexOf("nmap") >= 0}
+        <li class="nav-item" role="presentation">
+            <a
+                class="nav-link"
+                class:active={mode === "namp"}
+                on:click={() => changeMode("nmap")}>Nmap</a
+            >
+        </li>
+    {/if}
+
     {#if availableTools.indexOf("traceroute") >= 0}
         <li class="nav-item" role="presentation">
             <a

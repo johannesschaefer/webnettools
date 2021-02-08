@@ -38,11 +38,15 @@
             }
             if (!response.ok) {
                 status = Status.ERROR;
-                errorMsg = await response.text();
+                errorMsg =
+                    "Can't load config.<br />Details:<br /><pre>" +
+                    (await response.text()) +
+                    "</pre>";
             }
         } catch (e) {
             status = Status.ERROR;
-            errorMsg = e;
+            errorMsg =
+                "Can't load config.<br />Details:<br /><pre>" + e + "</pre>";
         }
     });
 
@@ -118,7 +122,7 @@
                 style="margin-top: 2rem;"
                 role="alert"
             >
-                {errorMsg}
+                {@html errorMsg}
             </div>
         </div>
     {/if}

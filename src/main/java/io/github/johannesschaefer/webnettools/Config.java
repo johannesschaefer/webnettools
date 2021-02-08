@@ -1,15 +1,23 @@
 package io.github.johannesschaefer.webnettools;
 
-import com.google.common.collect.Lists;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import javax.enterprise.inject.Produces;
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import java.io.IOException;
+import java.util.List;
 
 @Path("/config")
 public class Config {
+    @ConfigProperty(name = "AVAILABLE_TOOLS", defaultValue = "testssl,ping,traceroute,nmap")
+    List<String> availableTools;
+
     @GET
+    @Produces
+    @Singleton
     public ToolConfiguration config() throws IOException {
-        return new ToolConfiguration(Lists.newArrayList("testssl", "ping", "traceroute", "nmap"));
+        return new ToolConfiguration(availableTools);
     }
 }

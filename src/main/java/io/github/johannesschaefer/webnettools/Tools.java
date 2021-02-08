@@ -8,21 +8,33 @@ import io.github.johannesschaefer.webnettools.payload.TestSSLPayload;
 import io.github.johannesschaefer.webnettools.payload.TraceroutePayload;
 import org.jboss.logging.Logger;
 
-import javax.ws.rs.*;
+import javax.inject.Inject;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Path("/tools/")
 public class Tools {
     private static final Logger LOG = Logger.getLogger(Tools.class);
 
+    @Inject
+    private ToolConfiguration config;
+
     @POST
     @Path("nmap")
     public Response nmap(NmapPayload payload) throws IOException {
+        if (!config.getAvailableTools().contains("nmap")) {
+            return Response.serverError().entity("nmap not in list of available tools").build();
+        }
         if (payload == null || Strings.isNullOrEmpty(payload.getHost())) {
-            return Response.serverError().build();
+            return Response.serverError().entity("empty host").build();
         }
 
         List<String> cmd = Lists.newArrayList("nmap");
@@ -33,8 +45,11 @@ public class Tools {
     @POST
     @Path("ping")
     public Response ping(PingPayload payload) throws IOException {
+        if (!config.getAvailableTools().contains("ping")) {
+            return Response.serverError().entity("ping not in list of available tools").build();
+        }
         if (payload == null || Strings.isNullOrEmpty(payload.getHost())) {
-            return Response.serverError().build();
+            return Response.serverError().entity("empty host").build();
         }
         if (payload.getCount() == null) {
             payload.setCount(3);
@@ -68,8 +83,11 @@ public class Tools {
     @POST
     @Path("traceroute")
     public Response traceroute(TraceroutePayload payload) throws IOException {
+        if (!config.getAvailableTools().contains("traceroute")) {
+            return Response.serverError().entity("traceroute not in list of available tools").build();
+        }
         if (payload == null || Strings.isNullOrEmpty(payload.getHost())) {
-            return Response.serverError().build();
+            return Response.serverError().entity("empty host").build();
         }
 
         List<String> cmd = Lists.newArrayList("traceroute");
@@ -81,8 +99,11 @@ public class Tools {
     @POST
     @Path("testssl")
     public Response testssl(TestSSLPayload payload) throws IOException {
+        if (!config.getAvailableTools().contains("testssl")) {
+            return Response.serverError().entity("testssl not in list of available tools").build();
+        }
         if (payload == null || Strings.isNullOrEmpty(payload.getUrl())) {
-            return Response.serverError().build();
+            return Response.serverError().entity("empty url").build();
         }
 
         List<String> cmd = Lists.newArrayList("testssl.sh");
@@ -92,12 +113,17 @@ public class Tools {
         if (payload.isQuiet()) {
             cmd.add("--quiet");
         }
+        if(Files.exists(Paths.get("/certs"))) {
+            cmd.add("--add-ca");
+            cmd.add("/certs");
+        }
         cmd.add(payload.getUrl());
 
         return getStreamResponse(cmd);
     }
 
     private Response getStreamResponse(List<String> cmd) throws IOException {
+        LOG.info("command: " + cmd.toString());
         Process process = new ProcessBuilder().command(cmd).redirectErrorStream(true).start();
         return Response.ok((StreamingOutput) outputStream -> copyStream(process.getInputStream(), outputStream)).build();
     }

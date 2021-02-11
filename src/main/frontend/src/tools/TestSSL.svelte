@@ -4,6 +4,7 @@
     import { TaskStatus } from "../TaskStatus";
     import { slide } from "svelte/transition";
     import { tooltips } from "../tooltips";
+    import BooleanInput from "../inputs/BooleanInput.svelte";
 
     export let payload = {
         type: "testssl",
@@ -94,46 +95,20 @@
             {#if showOptions}
                 <div class="row" in:slide={{}} out:slide={{}}>
                     <div class="col">
-                        <div class="form-check">
-                            <input
-                                bind:checked={payload.hints}
-                                class="form-check-input"
-                                type="checkbox"
-                                id="flags-hints"
-                            />
-                            <label class="form-check-label" for="flags-hints">
-                                Hints
-                            </label>
-                            <i
-                                use:tooltips
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="This option is not in use yet. This option is meant to give hints how to fix a finding or at least a help to improve something. GIVE_HINTS is the environment variable for this."
-                                class="bi bi-question-circle pl-2"
-                                style="color: #495057"
-                            />
-                        </div>
+                        <BooleanInput
+                            bind:value={payload.hints}
+                            name="hints"
+                            label="Hints"
+                            description="This option is not in use yet. This option is meant to give hints how to fix a finding or at least a help to improve something. GIVE_HINTS is the environment variable for this."
+                        />
                     </div>
                     <div class="col">
-                        <div class="form-check">
-                            <input
-                                bind:checked={payload.quiet}
-                                class="form-check-input"
-                                type="checkbox"
-                                id="flags-quiet"
-                            />
-                            <label class="form-check-label" for="flags-quiet">
-                                Quiet
-                            </label>
-                            <i
-                                use:tooltips
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="Normally testssl.sh displays a banner on stdout with several version information, usage rights and a warning. This option suppresses it. Please note that by choosing this option you acknowledge usage terms and the warning normally appearing in the banner."
-                                class="bi bi-question-circle pl-2"
-                                style="color: #495057"
-                            />
-                        </div>
+                        <BooleanInput
+                            bind:value={payload.quiet}
+                            name="quiet"
+                            label="Quiet"
+                            description="Normally testssl.sh displays a banner on stdout with several version information, usage rights and a warning. This option suppresses it. Please note that by choosing this option you acknowledge usage terms and the warning normally appearing in the banner."
+                        />
                     </div>
                 </div>
             {/if}

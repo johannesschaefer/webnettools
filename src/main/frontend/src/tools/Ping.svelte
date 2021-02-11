@@ -3,6 +3,7 @@
     import type { ResultTask } from "../ResultTask";
     import { TaskStatus } from "../TaskStatus";
     import { slide } from "svelte/transition";
+    import NumberInput from "../inputs/NumberInput.svelte";
 
     export let payload = { type: "ping", host: "", count: 5, wait: 1 };
     export const name = "ping";
@@ -83,48 +84,24 @@
             {#if showOptions}
                 <div class="row" in:slide={{}} out:slide={{}}>
                     <div class="col">
-                        <label for="ping-count">Count</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span
-                                    class="input-group-text bi bi-question-circle"
-                                    id="ping-count"
-                                />
-                            </div>
-                            <input
-                                type="number"
-                                min="1"
-                                max="100"
-                                step="1"
-                                class="form-control"
-                                placeholder="Count"
-                                aria-label="Count"
-                                aria-describedby="ping-count"
-                                bind:value={payload.count}
-                            />
-                        </div>
+                        <NumberInput
+                            name="count"
+                            bind:value={payload.count}
+                            label="Count"
+                            min={1}
+                            max={100}
+                            step={1}
+                        />
                     </div>
                     <div class="col">
-                        <label for="ping-wait">Wait</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span
-                                    class="input-group-text bi bi-question-circle"
-                                    id="ping-wait"
-                                />
-                            </div>
-                            <input
-                                type="number"
-                                min="1"
-                                max="100"
-                                step="1"
-                                class="form-control"
-                                placeholder="Wait"
-                                aria-label="Wait"
-                                aria-describedby="ping-wait"
-                                bind:value={payload.wait}
-                            />
-                        </div>
+                        <NumberInput
+                            name="wait"
+                            bind:value={payload.wait}
+                            label="Wait"
+                            min={1}
+                            max={100}
+                            step={1}
+                        />
                     </div>
                 </div>
             {/if}

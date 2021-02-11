@@ -4,7 +4,7 @@
     import { TaskStatus } from "../TaskStatus";
     import { slide } from "svelte/transition";
 
-    export let payload = { host: "", count: 5, wait: 1 };
+    export let payload = { type: "ping", host: "", count: 5, wait: 1 };
     export const name = "ping";
 
     let showOptions: boolean = false;

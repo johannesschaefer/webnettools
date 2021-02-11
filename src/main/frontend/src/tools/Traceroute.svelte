@@ -4,7 +4,7 @@
     import { TaskStatus } from "../TaskStatus";
     import { slide } from "svelte/transition";
 
-    export let payload = { host: "" };
+    export let payload = { type: "traceroute", host: "" };
     export const name = "traceroute";
 
     let showOptions: boolean = false;

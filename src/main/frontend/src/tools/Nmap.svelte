@@ -4,7 +4,7 @@
     import { TaskStatus } from "../TaskStatus";
     import { slide } from "svelte/transition";
 
-    export let payload = { host: "", count: 5, wait: 1 };
+    export let payload = { type: "nmap", host: "" };
     export const name = "nmap";
 
     let showOptions: boolean = false;

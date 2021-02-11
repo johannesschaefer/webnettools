@@ -12,7 +12,7 @@ import java.util.List;
 @Path("/config")
 public class Config {
     @ConfigProperty(name = "AVAILABLE_TOOLS", defaultValue = "testssl,ping,traceroute,nmap")
-    List<String> availableTools;
+    private List<String> availableTools;
 
     @GET
     @Produces

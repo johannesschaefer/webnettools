@@ -123,7 +123,7 @@ public class Tools {
     }
 
     private Response getStreamResponse(List<String> cmd) throws IOException {
-        LOG.info("command: " + cmd.toString());
+        LOG.debug("command: " + cmd.toString());
         Process process = new ProcessBuilder().command(cmd).redirectErrorStream(true).start();
         return Response.ok((StreamingOutput) outputStream -> copyStream(process.getInputStream(), outputStream)).build();
     }

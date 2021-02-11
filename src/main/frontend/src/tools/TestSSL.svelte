@@ -5,7 +5,12 @@
     import { slide } from "svelte/transition";
     import { tooltips } from "../tooltips";
 
-    export let payload = { url: "", hints: true, quiet: false };
+    export let payload = {
+        type: "testssl",
+        url: "",
+        hints: true,
+        quiet: false,
+    };
     export const name = "testssl";
 
     let showOptions: boolean = false;

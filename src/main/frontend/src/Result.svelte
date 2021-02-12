@@ -127,26 +127,27 @@
         </div>
         <div
             class="p-2 bd-highlight flex-grow-1 justify-content-end"
-            style="margin-left: 1em; margin-top: 0.5em"
+            style="margin-left: 1em; margin-top: 0em"
+            on:mouseenter={() => (statusVisible = false)}
+            on:mouseleave={() => (statusVisible = true)}
         >
             {#if statusVisible}
                 <div
-                    on:mouseenter={() => (statusVisible = false)}
-                    on:mouseleave={() => (statusVisible = true)}
-                    class:spinner-border={result.status ===
-                        TaskStatus.RUNNING ||
-                        result.status === TaskStatus.PREPARED}
+                    class="spinner-border"
+                    style="margin-top: 0.5em"
                     role="status"
+                    class:d-none={result.status !== TaskStatus.RUNNING &&
+                        result.status !== TaskStatus.PREPARED}
                 >
                     <span class="sr-only">Loading...</span>
                 </div>
             {:else}
                 <i
-                    on:mouseenter={() => (statusVisible = false)}
-                    on:mouseleave={() => (statusVisible = true)}
                     on:click|stopPropagation={cancelRequest}
                     class="bi bi-x"
-                    style="font-size: 1.3em"
+                    style="font-size: 2.6em; line-height: 0em; margin-left: -0.2em; margin-buttom: -0.5em;"
+                    class:d-none={result.status !== TaskStatus.RUNNING &&
+                        result.status !== TaskStatus.PREPARED}
                 />
             {/if}
         </div>

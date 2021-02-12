@@ -8,8 +8,8 @@ Currently it support the following tools:
 * [testssl.sh](https://github.com/drwetter/testssl.sh)
 
 <p align="center">
-  <img align="center" style="display: inline" src="docs/testssl.png" alt="test ssl tooling" width="90%" />
-  <img align="center" style="display: inline" src="docs/ping.png" alt="ping tooling" width="90%" />
+  <img align="center" style="display: inline" src="docs/testssl.png" alt="test ssl tooling" height="400" />
+  <img align="center" style="display: inline" src="docs/ping.png" alt="ping tooling" height="400" />
 </p>
 
 Web Net Tools is a ready to use Docker image. No additional setup of the mentioned tools is needed.
@@ -21,7 +21,7 @@ Simple run the following Docker command:
 docker run -p 8080:8080 --name webnettools johannesschafer/webnettools:0.0.1-SNAPSHOT
 ```
 
-## Configuration option
+## Configuration options
 
 Currently you can configure the following aspects
 

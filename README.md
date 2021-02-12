@@ -1,6 +1,6 @@
 # Web Net Tools
 
-Web Net Tools are an web frontend for some useful tooling.
+Web Net Tools are an web frontend for some useful tooling. It provides especially an web frontend for tools like testssl.sh and nmap.
 Currently it support the following tools:
 * Ping
 * Traceroute

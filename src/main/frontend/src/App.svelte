@@ -2,14 +2,11 @@
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
     import AppFooter from "./AppFooter.svelte";
-    import type { Configuration } from "./Configuration";
+    import type { Configuration, ToolMD } from "./Configuration";
     import Navigation from "./Navigation.svelte";
     import ResultList from "./ResultList.svelte";
     import type { ResultTask } from "./ResultTask";
-    import Nmap from "./tools/Nmap.svelte";
-    import Ping from "./tools/Ping.svelte";
-    import TestSsl from "./tools/TestSSL.svelte";
-    import Traceroute from "./tools/Traceroute.svelte";
+    import GenericTool from "./tools/GenericTool.svelte";
 
     enum Status {
         LOADING,
@@ -17,21 +14,20 @@
         ERROR,
     }
 
-    let currentComponent;
-    let currentComponentProps;
-    let currentComponentInstance;
     let resultListComponent: ResultList;
-    let config: Configuration = { availableTools: [] };
+    let config: Configuration = { availableTools: [], toolMD: [] };
     let status: Status = Status.LOADING;
     let errorMsg: string = "";
+    let currentTool: ToolMD;
+    let payload: any;
 
     onMount(async () => {
         try {
             const response = await fetch("__URL__" + "config");
             if (response.ok && response.body !== null) {
                 config = ((await response.json()) as unknown) as Configuration;
-                if (config.availableTools.length > 0) {
-                    modeChanged(config.availableTools[0]);
+                if (config.toolMD.length > 0) {
+                    modeChanged(config.toolMD[0].name);
                 }
 
                 status = Status.READY;
@@ -51,16 +47,7 @@
     });
 
     function modeChanged(mode: string) {
-        if (mode === "testssl") {
-            currentComponent = TestSsl;
-        } else if (mode === "ping") {
-            currentComponent = Ping;
-        } else if (mode === "traceroute") {
-            currentComponent = Traceroute;
-        } else if (mode === "nmap") {
-            currentComponent = Nmap;
-        }
-        currentComponentProps = {};
+        currentTool = config.toolMD.filter((tool) => tool.name == mode)[0];
     }
 
     function addResult(event: CustomEvent<ResultTask>) {
@@ -69,7 +56,7 @@
 
     function edit(result: ResultTask) {
         modeChanged(result.mode);
-        currentComponentProps = { payload: result.payload };
+        payload = result.payload;
     }
 </script>
 
@@ -83,17 +70,15 @@
         <div transition:fade={{ delay: 300, duration: 300 }}>
             <div class="container-fluid">
                 <Navigation
-                    availableTools={config.availableTools}
-                    mode={currentComponentInstance !== undefined
-                        ? currentComponentInstance.name
-                        : ""}
+                    tools={config.toolMD}
+                    mode={currentTool.name}
                     on:modeChanged={(ev) => modeChanged(ev.detail)}
                 />
-                <svelte:component
-                    this={currentComponent}
-                    bind:this={currentComponentInstance}
-                    {...currentComponentProps}
+
+                <GenericTool
+                    tool={currentTool}
                     on:createResult={addResult}
+                    p={payload}
                 />
             </div>
             <div class="container-fluid" style="padding-top: 0.5em">

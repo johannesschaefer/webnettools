@@ -14,12 +14,12 @@ import java.util.concurrent.TimeUnit;
 
 public class RateLimitCacheProvider {
     @ConfigProperty(name = "RATE_LIMIT", defaultValue = "1")
-    private long rateLimit;
+    long rateLimit;
 
     LoadingCache<String, Boolean> store;
 
     @PostConstruct
-    private void init() {
+    void init() {
         store = CacheBuilder.newBuilder()
                 .maximumSize(100000)
                 .expireAfterWrite(rateLimit, TimeUnit.MILLISECONDS)

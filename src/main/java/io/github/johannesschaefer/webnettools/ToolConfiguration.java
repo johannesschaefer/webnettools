@@ -1,5 +1,6 @@
 package io.github.johannesschaefer.webnettools;
 
+import io.github.johannesschaefer.webnettools.metadata.ToolMD;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,4 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ToolConfiguration {
     private List<String> availableTools;
+    private List<ToolMD> toolMD;
 }

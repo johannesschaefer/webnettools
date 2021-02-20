@@ -1,8 +1,9 @@
 <script lang="ts">
-    import type { NumberOptionMD } from "../Configuration";
+    import { afterUpdate, beforeUpdate } from "svelte";
+    import type { StringOptionMD } from "../Configuration";
 
-    export let value: number;
-    export let md: NumberOptionMD;
+    export let value: string;
+    export let md: StringOptionMD;
 </script>
 
 <div>
@@ -16,10 +17,9 @@
             />
         </div>
         <input
-            type="number"
-            min={md.min}
-            max={md.max}
-            step={md.step}
+            type="text"
+            minlength={md.minlength}
+            maxlength={md.maxlength}
             class="form-control"
             placeholder={md.displayName ? md.displayName : md.name}
             aria-label={md.displayName ? md.displayName : md.name}

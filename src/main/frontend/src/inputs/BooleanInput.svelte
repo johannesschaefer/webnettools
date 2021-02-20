@@ -1,26 +1,28 @@
 <script lang="ts">
-    import { tooltips } from "../tooltips";
+    import type { BooleanOptionMD } from "../Configuration";
 
     export let value: boolean;
-    export let name: string;
-    export let label: string;
-    export let description: string = "";
+    export let md: BooleanOptionMD;
+    let values = [
+        { value: true, label: md.labelTrue },
+        { value: false, label: md.labelFalse },
+    ];
 </script>
 
-<div class="form-check">
-    <input
-        bind:checked={value}
-        class="form-check-input"
-        type="checkbox"
-        id={name}
-    />
-    <label class="form-check-label" for={name}> {label ? label : name} </label>
-    <i
-        use:tooltips
-        data-toggle="tooltip"
-        data-placement="top"
-        title={description}
-        class="bi bi-question-circle pl-2"
-        style="color: #495057"
-    />
+<div>
+    <label for={md.name}> {md.displayName ? md.displayName : md.name} </label>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <i
+                title={md.description}
+                class="input-group-text bi bi-question-circle pl-2"
+                style="color: #495057"
+            />
+        </div>
+        <select class="form-control" style="width: 8em;" bind:value>
+            {#each values as v}
+                <option value={v.value}>{v.label}</option>
+            {/each}
+        </select>
+    </div>
 </div>

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface NumberParam {
     String displayName();
 
-    String description();
+    String description() default "";
 
     String param();
 

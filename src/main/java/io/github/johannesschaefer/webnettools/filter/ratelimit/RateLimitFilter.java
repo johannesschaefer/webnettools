@@ -37,12 +37,16 @@ public class RateLimitFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext context) throws IOException {
-        if (!info.getPath().startsWith("/tools/")) {
-            return;
-        }
-        // check if client exceeded rate limit
-        if (isOverRateLimit(context)) {
-            context.abortWith(Response.status(429).entity("Too Many Requests").build());
+        try {
+            if (!info.getPath().startsWith("/tools/")) {
+                return;
+            }
+            // check if client exceeded rate limit
+            if (isOverRateLimit(context)) {
+                context.abortWith(Response.status(429).entity("Too Many Requests").build());
+            }
+        } catch (Exception e) {
+            context.abortWith(Response.status(500).entity(e.getMessage()).build());
         }
     }
 

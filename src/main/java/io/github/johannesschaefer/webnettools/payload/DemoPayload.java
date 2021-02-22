@@ -30,6 +30,9 @@ public class DemoPayload implements Payload {
     @BooleanParam(displayName ="Bool False", param="bool3", description="boolean demo default false", labelTrue = "On", labelFalse = "Off")
     private Boolean boolFalse = false;
 
+    @StringParam(displayName ="String Min Max", param="stringMinMax", description="String min max demo", paramType = ParameterType.EQUALS, minLength = 2, maxLength = 5)
+    private String stringMinMax = "ab";
+
     @Override
     public String getCacheString() {
         return main;

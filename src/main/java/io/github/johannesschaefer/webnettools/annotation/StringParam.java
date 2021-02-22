@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface StringParam {
     String displayName();
 
-    String description();
+    String description() default "";
 
     String param();
 

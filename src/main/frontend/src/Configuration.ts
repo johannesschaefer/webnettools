@@ -9,6 +9,7 @@ export interface ToolMD {
     main: StringOptionMD;
     options: OptionMD[];
     groups: GroupMD[];
+    presetPayload: any;
 }
 
 export interface GroupMD {

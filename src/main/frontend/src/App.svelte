@@ -49,8 +49,9 @@
         }
     });
 
-    function modeChanged(mode: string) {
+    function modeChanged(mode: string, presetPayload: any = null) {
         currentTool = config.toolMD.filter((tool) => tool.name == mode)[0];
+        currentTool.presetPayload = presetPayload;
     }
 
     function addResult(event: CustomEvent<ResultTask>) {
@@ -58,8 +59,8 @@
     }
 
     function edit(result: ResultTask) {
-        modeChanged(result.mode);
-        payload = result.payload;
+        payload = { ...result.payload };
+        modeChanged(result.mode, payload);
     }
 </script>
 

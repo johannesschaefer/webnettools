@@ -31,14 +31,17 @@
         if (newTool == oldTool) {
             return;
         }
+        showOptions = {};
+        if (newTool.presetPayload !== null) {
+            payload = newTool.presetPayload;
+            return;
+        }
 
         let newPayload = { type: newTool.name };
         newPayload[newTool.main.name] = "";
         newTool.options.forEach(
             (o: OptionMD) => (newPayload[o.name] = o.defaultValue)
         );
-        showOptions = {};
-        newTool.groups.forEach((g: GroupMD) => (showOptions[g.name] = false));
         payload = newPayload;
         oldTool = newTool;
     }
@@ -105,6 +108,7 @@
             <div
                 class="row text-secondary"
                 on:click={() => {
+                    console.log("showOptions", showOptions);
                     showOptions[group.name] = !showOptions[group.name];
                 }}
                 style="font-size: 0.9em;"

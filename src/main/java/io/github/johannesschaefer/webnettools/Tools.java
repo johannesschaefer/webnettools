@@ -32,24 +32,30 @@ public class Tools {
 
     @POST
     @Path("{tool}")
-    public Response genericTool(@PathParam("tool") String tool, Payload payload) throws IOException, IllegalAccessException, NoSuchMethodException, InstantiationException, InvocationTargetException {
+    public Response genericTool(@PathParam("tool") String tool, Payload payload) {
         if (!availableTools.contains(tool)) {
             return Response.serverError().entity(tool+" not in list of available tools").build();
         }
 
-        checkAndCorrectPayload(payload);
+        try {
+            checkAndCorrectPayload(payload);
 
-        List<String> cmd = Lists.newArrayList();
+            List<String> cmd = Lists.newArrayList();
 
-        cmd.addAll(getCmd(payload));
+            cmd.addAll(getCmd(payload));
 
-        for (Field f : payload.getClass().getDeclaredFields()) {
-            cmd.addAll(getParam(payload, f));
+            for (Field f : payload.getClass().getDeclaredFields()) {
+                cmd.addAll(getParam(payload, f));
+            }
+
+            cmd.addAll(getMain(payload));
+
+            return getStreamResponse(cmd);
         }
-
-        cmd.addAll(getMain(payload));
-
-        return getStreamResponse(cmd);
+        catch (Exception e) {
+                log.error(e);
+                return Response.serverError().entity(e.getMessage()).build();
+        }
     }
 
     private ArrayList<String> getMain(Payload payload) throws IllegalAccessException {
@@ -80,7 +86,6 @@ public class Tools {
                 }
             }
             if (f.getDeclaredAnnotation(BooleanParam.class) != null) {
-                var anno = f.getDeclaredAnnotation(BooleanParam.class);
                 if(defaultValue != null && value == null) {
                     f.set(payload, defaultValue);
                     continue;
@@ -91,6 +96,18 @@ public class Tools {
                 if(defaultValue != null && value == null) {
                     f.set(payload, defaultValue);
                     continue;
+                }
+                if (value == null) {
+                    continue;
+                }
+                if (!(value instanceof String)) {
+                    throw new RuntimeException("Parameter " + anno.displayName() + " is not of type String");
+                }
+                if (((String)value).length() < anno.minLength()) {
+                    throw new RuntimeException("Parameter " + anno.displayName() + " is shorter than needed (min length: " + anno.minLength() + ")." );
+                }
+                if (((String)value).length() > anno.maxLength()) {
+                    throw new RuntimeException("Parameter " + anno.displayName() + " is longer than needed (max length: " + anno.maxLength() + ")." );
                 }
             }
             if (f.getDeclaredAnnotation(NumberParam.class) != null) {
@@ -111,15 +128,14 @@ public class Tools {
                     doubleValue = Double.parseDouble((String) value);
                 }
                 else {
-                    throw new RuntimeException("invalid type of " + value);
+                    throw new RuntimeException("Invalid type of " + value);
                 }
 
-                if(anno.min() > doubleValue) {
-                    f.set(payload, anno.min());
-                    continue;
+                if(anno.min() >= doubleValue) {
+                    throw new RuntimeException("Parameter " + anno.displayName() + " is out of range (min: " + anno.min() + ")");
                 }
-                if(anno.max() < doubleValue) {
-                    f.set(payload, anno.max());
+                if(anno.max() <= doubleValue) {
+                    throw new RuntimeException("Parameter " + anno.displayName() + " is out of range (max: " + anno.max() + ")");
                 }
             }
         }
@@ -205,13 +221,7 @@ public class Tools {
                 throw new RuntimeException("Unsupported paramType " + pType);
         }
     }
-/*
-    private Collection<String> getNumberParam(String value, Field field) {
-        NumberParam anno = field.getDeclaredAnnotation(NumberParam.class);
-        String paramStr = anno.param();
-        return buildReturn(anno.paramType(), paramStr, value);
-    }
-*/
+
     private Field getMainField(Class<? extends Payload> aClass) {
         var fields = aClass.getDeclaredFields();
         for (Field f : fields) {
@@ -223,17 +233,10 @@ public class Tools {
         throw new RuntimeException("no main field declared");
     }
 
-    private Response getStreamResponse(List<String> cmd) {
-        try
-        {
-            log.info("command: " + String.join(" ", cmd));
-            Process process = new ProcessBuilder().command(cmd).redirectErrorStream(true).start();
-            return Response.ok((StreamingOutput) outputStream -> copyStream(process.getInputStream(), outputStream)).build();
-        }
-        catch(Exception e) {
-            log.error(e);
-            return Response.serverError().entity(e.getMessage()).build();
-        }
+    private Response getStreamResponse(List<String> cmd) throws IOException {
+        log.info("command: " + String.join(" ", cmd));
+        Process process = new ProcessBuilder().command(cmd).redirectErrorStream(true).start();
+        return Response.ok((StreamingOutput) outputStream -> copyStream(process.getInputStream(), outputStream)).build();
     }
 
     void copyStream(InputStream source, OutputStream target) throws IOException {

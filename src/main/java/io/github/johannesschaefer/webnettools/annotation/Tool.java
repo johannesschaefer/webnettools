@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface Tool {
     String cmd();
 
-    String description();
+    String description() default "";
 
     String name();
 

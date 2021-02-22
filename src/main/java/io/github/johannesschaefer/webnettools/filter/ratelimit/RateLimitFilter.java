@@ -23,7 +23,7 @@ public class RateLimitFilter implements ContainerRequestFilter {
     private static final Logger LOG = Logger.getLogger(RateLimitFilter.class);
 
     @Inject
-    @RateLimitCache
+    @RateLimitCacheQualifier
     Map<String, Boolean> rateLimitCache;
 
     @Inject

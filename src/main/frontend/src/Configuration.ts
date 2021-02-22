@@ -1,5 +1,4 @@
 export interface Configuration {
-    availableTools: string[];
     toolMD: ToolMD[];
 }
 
@@ -9,6 +8,12 @@ export interface ToolMD {
     description: string;
     main: StringOptionMD;
     options: OptionMD[];
+    groups: GroupMD[];
+}
+
+export interface GroupMD {
+    name: string;
+    description: string;
 }
 
 export interface OptionMD {
@@ -17,11 +22,16 @@ export interface OptionMD {
     type: string;
     description: string;
     defaultValue: string | number | boolean;
+    group: string;
 }
 
 export interface BooleanOptionMD extends OptionMD {
     labelTrue: string;
     labelFalse: string;
+}
+
+export interface EnumOptionMD extends OptionMD {
+    values: { value: string, label: string }[];
 }
 
 export interface NumberOptionMD extends OptionMD {

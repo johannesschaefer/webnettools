@@ -5,14 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MainParameter {
-    String displayName();
-
-    String description();
-
-    int minLength() default 0;
-
-    int maxLength() default Integer.MAX_VALUE;
+public @interface GroupValues {
+    Group[] value();
 }

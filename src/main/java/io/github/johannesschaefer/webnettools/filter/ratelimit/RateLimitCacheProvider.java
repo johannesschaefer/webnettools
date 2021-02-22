@@ -35,7 +35,7 @@ public class RateLimitCacheProvider {
 
     @Singleton
     @Produces
-    @RateLimitCache
+    @RateLimitCacheQualifier
     public Map<String, Boolean> produce() {
         return store.asMap();
     }

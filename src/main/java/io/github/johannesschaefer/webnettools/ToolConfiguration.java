@@ -11,6 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ToolConfiguration {
-    private List<String> availableTools;
     private List<ToolMD> toolMD;
 }

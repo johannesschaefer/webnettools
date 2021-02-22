@@ -20,9 +20,7 @@ public @interface NumberParam {
 
     double step() default 1;
 
-    boolean hasDefaultValue() default false;
-
-    double defaultValue() default 0;
+    String group() default "Options";
 
     ParameterType paramType() default ParameterType.SPACE;
 }

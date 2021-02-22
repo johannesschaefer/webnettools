@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Map;
+
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class BooleanOptionMD extends OptionMD {
-    private Boolean defaultValue;
-    private String labelTrue;
-    private String labelFalse;
+public class EnumOptionMD extends OptionMD {
+    private String defaultValue;
+    private Map<String, String> values;
 }

@@ -2,7 +2,7 @@
     import { afterUpdate, beforeUpdate } from "svelte";
     import type { StringOptionMD } from "../Configuration";
 
-    export let value: string;
+    export let value: string = null;
     export let md: StringOptionMD;
 </script>
 

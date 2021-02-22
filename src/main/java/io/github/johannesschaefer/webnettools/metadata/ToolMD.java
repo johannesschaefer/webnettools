@@ -15,4 +15,5 @@ public class ToolMD {
     private String description;
     private OptionMD main;
     private List<OptionMD> options;
+    private List<GroupMD> groups;
 }

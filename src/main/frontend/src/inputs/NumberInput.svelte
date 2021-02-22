@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { NumberOptionMD } from "../Configuration";
 
-    export let value: number;
+    export let value: number = null;
     export let md: NumberOptionMD;
 </script>
 

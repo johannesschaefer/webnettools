@@ -1,12 +1,13 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte";
-    import type { ResultTask } from "../ResultTask";
-    import { TaskStatus } from "../TaskStatus";
+    import type { ResultTask } from "./ResultTask";
+    import { TaskStatus } from "./TaskStatus";
     import { slide } from "svelte/transition";
-    import type { OptionMD, ToolMD } from "../Configuration";
-    import NumberInput from "../inputs/NumberInput.svelte";
-    import BooleanInput from "../inputs/BooleanInput.svelte";
-    import StringInput from "../inputs/StringInput.svelte";
+    import type { GroupMD, OptionMD, ToolMD } from "./Configuration";
+    import NumberInput from "./inputs/NumberInput.svelte";
+    import BooleanInput from "./inputs/BooleanInput.svelte";
+    import StringInput from "./inputs/StringInput.svelte";
+    import EnumInput from "./inputs/EnumInput.svelte";
 
     export let tool: ToolMD;
     let payload = {};
@@ -15,7 +16,7 @@
     $: setPayload(p);
 
     let oldTool: ToolMD;
-    let showOptions: boolean = false;
+    let showOptions = {};
     let inputField;
 
     onMount(async () => {
@@ -36,6 +37,8 @@
         newTool.options.forEach(
             (o: OptionMD) => (newPayload[o.name] = o.defaultValue)
         );
+        showOptions = {};
+        newTool.groups.forEach((g: GroupMD) => (showOptions[g.name] = false));
         payload = newPayload;
         oldTool = newTool;
     }
@@ -98,48 +101,62 @@
                 </div>
             </div>
         </form>
-        <div
-            class="row text-secondary"
-            on:click={() => {
-                showOptions = !showOptions;
-            }}
-            style="font-size: 0.9em;"
-        >
-            <i
-                class="bi"
-                class:bi-caret-right-fill={!showOptions}
-                class:bi-caret-down-fill={showOptions}
-                style="margin-right: 1em"
-            />
-            Options
-        </div>
-
-        {#if showOptions}
-            <div class="row" in:slide={{}} out:slide={{}}>
-                {#each tool.options as option}
-                    <div class="d-flex flex-wrap p-2">
-                        {#if option.type === "number"}
-                            <NumberInput
-                                md={option}
-                                bind:value={payload[option.name]}
-                            />
-                        {:else if option.type === "boolean"}
-                            <BooleanInput
-                                md={option}
-                                bind:value={payload[option.name]}
-                            />
-                        {:else if option.type === "string"}
-                            <StringInput
-                                md={option}
-                                bind:value={payload[option.name]}
-                            />
-                        {:else}
-                            No supported type for
-                            {option.displayName}
-                        {/if}
-                    </div>
-                {/each}
+        {#each tool.groups as group}
+            <div
+                class="row text-secondary"
+                on:click={() => {
+                    showOptions[group.name] = !showOptions[group.name];
+                }}
+                style="font-size: 0.9em;"
+            >
+                <i
+                    class="bi"
+                    class:bi-caret-right-fill={!showOptions[group.name]}
+                    class:bi-caret-down-fill={showOptions[group.name]}
+                    style="margin-right: 1em"
+                />
+                {group.name}
+                {#if group.description !== ""}
+                    <i
+                        title={group.description}
+                        class="bi-question-circle pl-2"
+                        style="color: #495057"
+                    />
+                {/if}
             </div>
-        {/if}
+
+            {#if showOptions[group.name]}
+                <div class="row" in:slide={{}} out:slide={{}}>
+                    {#each tool.options.filter((t) => t.group === group.name) as option}
+                        <div class="d-flex flex-wrap p-2">
+                            {#if option.type === "number"}
+                                <NumberInput
+                                    md={option}
+                                    bind:value={payload[option.name]}
+                                />
+                            {:else if option.type === "boolean"}
+                                <BooleanInput
+                                    md={option}
+                                    bind:value={payload[option.name]}
+                                />
+                            {:else if option.type === "enum"}
+                                <EnumInput
+                                    md={option}
+                                    bind:value={payload[option.name]}
+                                />
+                            {:else if option.type === "string"}
+                                <StringInput
+                                    md={option}
+                                    bind:value={payload[option.name]}
+                                />
+                            {:else}
+                                No supported type for
+                                {option.displayName}
+                            {/if}
+                        </div>
+                    {/each}
+                </div>
+            {/if}
+        {/each}
     </div>
 </div>

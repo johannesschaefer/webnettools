@@ -6,7 +6,7 @@
     import Navigation from "./Navigation.svelte";
     import ResultList from "./ResultList.svelte";
     import type { ResultTask } from "./ResultTask";
-    import GenericTool from "./tools/GenericTool.svelte";
+    import GenericTool from "./GenericTool.svelte";
 
     enum Status {
         LOADING,
@@ -15,7 +15,7 @@
     }
 
     let resultListComponent: ResultList;
-    let config: Configuration = { availableTools: [], toolMD: [] };
+    let config: Configuration = { toolMD: [] };
     let status: Status = Status.LOADING;
     let errorMsg: string = "";
     let currentTool: ToolMD;
@@ -23,11 +23,14 @@
 
     onMount(async () => {
         try {
-            const response = await fetch("__URL__" + "config");
+            const response = await self.fetch("__URL__" + "config");
             if (response.ok && response.body !== null) {
                 config = ((await response.json()) as unknown) as Configuration;
                 if (config.toolMD.length > 0) {
                     modeChanged(config.toolMD[0].name);
+                } else {
+                    status = Status.ERROR;
+                    errorMsg = "Can't load config. Number of tools is 0.";
                 }
 
                 status = Status.READY;

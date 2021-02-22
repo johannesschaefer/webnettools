@@ -14,13 +14,11 @@ public @interface BooleanParam {
 
     String param();
 
-    boolean hasDefaultValue() default false;
-
-    boolean defaultValue() default false;
-
     String labelTrue() default "True";
 
     String labelFalse() default "False";
 
-    ParameterType paramType() default ParameterType.SPACE;
+    String group() default "Options";
+
+    ParameterType paramType() default ParameterType.ONLY_PARAM;
 }

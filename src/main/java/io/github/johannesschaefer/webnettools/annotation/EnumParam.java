@@ -7,16 +7,12 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface StringParam {
+public @interface EnumParam {
     String displayName();
 
     String description();
 
     String param();
-
-    int minLength() default 0;
-
-    int maxLength() default Integer.MAX_VALUE;
 
     String group() default "Options";
 

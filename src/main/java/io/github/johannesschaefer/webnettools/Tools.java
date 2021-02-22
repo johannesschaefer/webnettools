@@ -14,6 +14,7 @@ import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -26,12 +27,13 @@ public class Tools {
     Logger log;
 
     @Inject
-    ToolConfiguration config;
+    @AvailableToolsQualifier
+    List<String> availableTools;
 
     @POST
     @Path("{tool}")
-    public Response genericTool(@PathParam("tool") String tool, Payload payload) throws IOException, IllegalAccessException {
-        if (!config.getAvailableTools().contains(tool)) {
+    public Response genericTool(@PathParam("tool") String tool, Payload payload) throws IOException, IllegalAccessException, NoSuchMethodException, InstantiationException, InvocationTargetException {
+        if (!availableTools.contains(tool)) {
             return Response.serverError().entity(tool+" not in list of available tools").build();
         }
 
@@ -61,14 +63,16 @@ public class Tools {
         return Lists.newArrayList(toolAnno.cmd());
     }
 
-    private void checkAndCorrectPayload(Payload payload) throws IllegalAccessException {
+    private void checkAndCorrectPayload(Payload payload) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+        var sample = payload.getClass().getConstructor().newInstance();
         for (Field f : payload.getClass().getDeclaredFields()) {
             f.setAccessible(true);
+            var defaultValue = f.get(sample);
             var value = f.get(payload);
             if (f.getDeclaredAnnotation(MainParameter.class) != null) {
                 var anno = f.getDeclaredAnnotation(MainParameter.class);
-                if(anno.hasDefaultValue() && value == null) {
-                    f.set(payload, anno.defaultValue());
+                if(defaultValue != null && value == null) {
+                    f.set(payload, defaultValue);
                     continue;
                 }
                 if (value == null) {
@@ -77,22 +81,22 @@ public class Tools {
             }
             if (f.getDeclaredAnnotation(BooleanParam.class) != null) {
                 var anno = f.getDeclaredAnnotation(BooleanParam.class);
-                if(anno.hasDefaultValue() && value == null) {
-                    f.set(payload, anno.defaultValue());
+                if(defaultValue != null && value == null) {
+                    f.set(payload, defaultValue);
                     continue;
                 }
             }
             if (f.getDeclaredAnnotation(StringParam.class) != null) {
                 var anno = f.getDeclaredAnnotation(StringParam.class);
-                if(anno.hasDefaultValue() && value == null) {
-                    f.set(payload, anno.defaultValue());
+                if(defaultValue != null && value == null) {
+                    f.set(payload, defaultValue);
                     continue;
                 }
             }
             if (f.getDeclaredAnnotation(NumberParam.class) != null) {
                 var anno = f.getDeclaredAnnotation(NumberParam.class);
-                if(anno.hasDefaultValue() && value == null) {
-                    f.set(payload, anno.defaultValue());
+                if(defaultValue != null && value == null) {
+                    f.set(payload, defaultValue);
                     continue;
                 }
                 if (value == null) {
@@ -135,10 +139,13 @@ public class Tools {
             return getBooleanParam(value, field);
         }
         if (field.getDeclaredAnnotation(StringParam.class) != null) {
-            return getStringParam(value, field);
+            return getParam(value, field.getDeclaredAnnotation(StringParam.class));
         }
         if (field.getDeclaredAnnotation(NumberParam.class) != null) {
-            return getNumberParam(value, field);
+            return getParam(value, field.getDeclaredAnnotation(NumberParam.class));
+        }
+        if (field.getDeclaredAnnotation(EnumParam.class) != null) {
+            return getParam(value, field.getDeclaredAnnotation(EnumParam.class));
         }
         return Lists.newArrayList();
     }
@@ -146,12 +153,11 @@ public class Tools {
     private Collection<String> getServerParam(Field field) {
         try
         {
-            var anno = field.getDeclaredAnnotation(ServerParam.class);
-            var instance = anno.handler().getDeclaredConstructor().newInstance();
+            var instance = field.getDeclaredAnnotation(ServerParam.class).handler().getDeclaredConstructor().newInstance();
             return instance.handle(field);
         }
         catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Can't handle server parameter.", e);
+            throw new RuntimeException("Can't handle server parameter " + field.getName(), e);
         }
     }
 
@@ -176,10 +182,15 @@ public class Tools {
         }
     }
 
-    private Collection<String> getStringParam(String value, Field field) {
-        StringParam anno = field.getDeclaredAnnotation(StringParam.class);
-        String paramStr = anno.param();
-        return buildReturn(anno.paramType(), paramStr, value);
+    private Collection<String> getParam(String value, Annotation anno) {
+        try {
+            String paramStr = (String) anno.getClass().getMethod("param").invoke(anno);
+            ParameterType paramType = (ParameterType) anno.getClass().getMethod("paramType").invoke(anno);
+            return buildReturn(paramType, paramStr, value);
+        }
+        catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Collection<String> buildReturn(ParameterType pType, String paramStr, String value) {
@@ -194,13 +205,13 @@ public class Tools {
                 throw new RuntimeException("Unsupported paramType " + pType);
         }
     }
-
+/*
     private Collection<String> getNumberParam(String value, Field field) {
         NumberParam anno = field.getDeclaredAnnotation(NumberParam.class);
         String paramStr = anno.param();
         return buildReturn(anno.paramType(), paramStr, value);
     }
-
+*/
     private Field getMainField(Class<? extends Payload> aClass) {
         var fields = aClass.getDeclaredFields();
         for (Field f : fields) {

@@ -1,4 +1,4 @@
-package io.github.johannesschaefer.webnettools.payload;
+package io.github.johannesschaefer.webnettools.payload.testssl;
 
 import com.google.common.collect.Lists;
 import io.github.johannesschaefer.webnettools.annotation.ServerParamHandler;

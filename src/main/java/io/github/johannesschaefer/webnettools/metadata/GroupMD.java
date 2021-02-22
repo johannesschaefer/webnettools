@@ -1,16 +1,13 @@
 package io.github.johannesschaefer.webnettools.metadata;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
-@SuperBuilder
-public class OptionMD {
+@AllArgsConstructor
+public class GroupMD {
     private String name;
-    private String displayName;
-    private String type;
     private String description;
-    private String group;
 }

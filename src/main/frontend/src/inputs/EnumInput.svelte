@@ -1,12 +1,8 @@
 <script lang="ts">
-    import type { BooleanOptionMD } from "../Configuration";
+    import type { EnumOptionMD } from "../Configuration";
 
-    export let value: boolean = null;
-    export let md: BooleanOptionMD;
-    let values = [
-        { value: true, label: md.labelTrue },
-        { value: false, label: md.labelFalse },
-    ];
+    export let value: string = null;
+    export let md: EnumOptionMD;
 </script>
 
 <div>
@@ -21,8 +17,8 @@
         </div>
         <select class="form-control" style="width: 8em;" bind:value>
             <option value={null} selected disabled hidden />
-            {#each values as v}
-                <option value={v.value}>{v.label}</option>
+            {#each Object.entries(md.values) as [value, label]}
+                <option {value}>{label}</option>
             {/each}
         </select>
     </div>

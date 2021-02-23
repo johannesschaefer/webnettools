@@ -131,10 +131,10 @@ public class Tools {
                     throw new RuntimeException("Invalid type of " + value);
                 }
 
-                if(anno.min() >= doubleValue) {
+                if(anno.min() > doubleValue) {
                     throw new RuntimeException("Parameter " + anno.displayName() + " is out of range (min: " + anno.min() + ")");
                 }
-                if(anno.max() <= doubleValue) {
+                if(anno.max() < doubleValue) {
                     throw new RuntimeException("Parameter " + anno.displayName() + " is out of range (max: " + anno.max() + ")");
                 }
             }

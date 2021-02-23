@@ -32,6 +32,7 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certificates tar git nmap ${JAVA_PACKAGE} \
     && microdnf update \
     && microdnf clean all \
+    && rpm -i https://rpmfind.net/linux/centos/8-stream/BaseOS/x86_64/os/Packages/traceroute-2.1.0-6.el8.x86_64.rpm \
     && mkdir /deployments \
     && chown 1001 /deployments \
     && chmod "g+rwX" /deployments \

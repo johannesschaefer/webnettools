@@ -34,6 +34,18 @@
                 }
 
                 status = Status.READY;
+                if (
+                    window.location.search &&
+                    window.location.search.indexOf("config=") >= 0
+                ) {
+                    let index = window.location.search.indexOf("config=") + 7;
+                    let data = JSON.parse(
+                        decodeURIComponent(
+                            window.location.search.substring(index)
+                        )
+                    );
+                    modeChanged(data.tool, data.payload);
+                }
             }
             if (!response.ok) {
                 status = Status.ERROR;

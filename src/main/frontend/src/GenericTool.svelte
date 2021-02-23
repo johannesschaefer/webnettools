@@ -50,6 +50,12 @@
     const dispatch = createEventDispatcher();
 
     function runTask() {
+        let data = { tool: tool.name, payload: payload };
+        window.history.pushState(
+            {},
+            tool.displayName + " " + payload[tool.main.name],
+            "?config=" + JSON.stringify(data)
+        );
         dispatch("createResult", <ResultTask>{
             active: true,
             displayText: tool.displayName + " " + payload[tool.main.name],
@@ -108,7 +114,6 @@
             <div
                 class="row text-secondary"
                 on:click={() => {
-                    console.log("showOptions", showOptions);
                     showOptions[group.name] = !showOptions[group.name];
                 }}
                 style="font-size: 0.9em;"

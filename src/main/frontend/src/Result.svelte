@@ -64,13 +64,11 @@
 
             if (response.ok && response.body !== null) {
                 result.status = TaskStatus.RUNNING;
-                const reader = response.body
-                    .pipeThrough(new TextDecoderStream())
-                    .getReader();
+                const reader = response.body.getReader();
                 while (true && result.status === TaskStatus.RUNNING) {
                     const { value, done } = await reader.read();
                     if (done) break;
-                    displayText += value;
+                    displayText += new TextDecoder("utf-8").decode(value);
                     displayTextFormated = ansi_up.ansi_to_html(displayText);
                     scrollToEnd();
                 }

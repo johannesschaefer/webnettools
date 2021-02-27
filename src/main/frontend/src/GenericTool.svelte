@@ -54,7 +54,7 @@
         window.history.pushState(
             {},
             tool.displayName + " " + payload[tool.main.name],
-            "?config=" + JSON.stringify(data)
+            "?config=" + encodeURIComponent(JSON.stringify(data))
         );
         dispatch("createResult", <ResultTask>{
             active: true,

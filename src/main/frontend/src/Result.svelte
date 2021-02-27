@@ -169,7 +169,6 @@
                 style="padding-top 0px; padding-bottom: 0px;"
             >
                 <pre
-                    class="overflow-scroll-gradient"
                     bind:this={textarea}>
                 {@html displayTextFormated}
                 </pre>
@@ -177,33 +176,3 @@
         </div>
     {/if}
 </div>
-
-<style>
-    .overflow-scroll-gradient {
-        overflow: scroll;
-        max-height: 20em;
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-    }
-    .overflow-scroll-gradient::before {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 0.5em;
-        background: linear-gradient(
-            white,
-            rgba(255, 255, 255, 0.001)
-        ); /* transparent keyword is broken in Safari */
-    }
-    .overflow-scroll-gradient::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 0.5em;
-        background: linear-gradient(
-            rgba(255, 255, 255, 0.001),
-            white
-        ); /* transparent keyword is broken in Safari */
-    }
-</style>

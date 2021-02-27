@@ -61,10 +61,6 @@ export default {
 			{
 				src: 'node_modules/bootstrap-icons/icons/*.svg',
 				dest: 'public/vendor/bootstrap-icons/icons'
-			},
-			{
-				src: 'node_modules/jquery/dist/**/*',
-				dest: 'public/vendor/jquery'
 			}]
 		}),
 		replace({

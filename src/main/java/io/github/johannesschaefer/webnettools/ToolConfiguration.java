@@ -12,4 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ToolConfiguration {
     private List<ToolMD> toolMD;
+    private String introText;
 }

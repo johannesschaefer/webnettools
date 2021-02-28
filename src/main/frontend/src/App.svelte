@@ -84,6 +84,7 @@
 
     {#if status === Status.READY}
         <div transition:fade={{ delay: 300, duration: 300 }}>
+            <p class="container-fluid">{@html config.introText}</p>
             <div class="container-fluid">
                 <Navigation
                     tools={config.toolMD}

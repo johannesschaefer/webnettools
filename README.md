@@ -46,6 +46,8 @@ Currently you can configure the following aspects
 docker run -p 8080:8080 -v ./localfolderwithcerts:/certs --name webnettools johannesschafer/webnettools:0.0.1-SNAPSHOT
 ```
 
+* Intro text - set the Docker environment variable `INTRO_TEXT` to show an additional paragraph in front of the tool selection. This can be used to help the users in your specific environment. HTML tags are supported.
+
 ## Extension
 
 To add own tools you have to create an clone or fork of this repository and create an 

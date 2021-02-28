@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.github.johannesschaefer.webnettools.annotation.*;
 import io.github.johannesschaefer.webnettools.metadata.*;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 import org.reflections.Reflections;
 
@@ -16,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("/config")
@@ -30,6 +32,9 @@ public class Config {
     @AvailableToolsQualifier
     List<String> availableTools;
 
+    @ConfigProperty(name = "INTRO_TEXT")
+    Optional<String> introText;
+
     @GET
     public ToolConfiguration config() throws IOException {
         var tools = reflections.getTypesAnnotatedWith(Tool.class);
@@ -37,7 +42,7 @@ public class Config {
                                         stream().
                                         filter(this::filterTools).
                                         map(this::toToolMD).
-                                        collect(Collectors.toList()));
+                                        collect(Collectors.toList()), introText.orElseGet(()->""));
     }
 
     private boolean filterTools(Class<?> aToolClass) {

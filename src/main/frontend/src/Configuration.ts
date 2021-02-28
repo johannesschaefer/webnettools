@@ -1,5 +1,6 @@
 export interface Configuration {
     toolMD: ToolMD[];
+    introText?: string;
 }
 
 export interface ToolMD {

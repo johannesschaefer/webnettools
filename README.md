@@ -30,7 +30,7 @@ can help you to make such services available for easy use.
 
 Simple run the following Docker command:
 ```
-docker run -p 8080:8080 --name webnettools johannesschafer/webnettools:0.0.1-SNAPSHOT
+docker run -p 8080:8080 --name webnettools johannesschafer/webnettools:1.0.0
 ```
 
 ## Configuration options

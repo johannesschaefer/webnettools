@@ -19,7 +19,6 @@
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <quarkus.container-image.build>true</quarkus.container-image.build>
-        <quarkus.docker.build-args.TESTSSL_VERSION>3.0.4</quarkus.docker.build-args.TESTSSL_VERSION>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -174,7 +173,6 @@
                     <nodeVersion>v14.15.4</nodeVersion>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -227,6 +225,91 @@
                         <maven.home>${maven.home}</maven.home>
                     </systemPropertyVariables>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.34.1</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>johannesschafer/webnettools:${project.version}</name>
+                            <build>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>docker-push</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>tag-for-heroku</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>tag</argument>
+                                <argument>johannesschafer/webnettools:0.0.1-SNAPSHOT</argument>
+                                <argument>registry.heroku.com/web-net-tools/web</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>push-to-heroku</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>push</argument>
+                                <argument>registry.heroku.com/web-net-tools/web</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>release-on-heroku</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <executable>heroku</executable>
+                            <arguments>
+                                <argument>container:release</argument>
+                                <argument>web</argument>
+                                <argument>--app=web-net-tools</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -169,6 +169,7 @@
                 style="padding-top 0px; padding-bottom: 0px;"
             >
                 <pre
+                    class="overflow-scroll-gradient"
                     bind:this={textarea}>
                 {@html displayTextFormated}
                 </pre>
@@ -176,3 +177,12 @@
         </div>
     {/if}
 </div>
+
+<style>
+    .overflow-scroll-gradient {
+        overflow: scroll;
+        max-height: 20em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+</style>

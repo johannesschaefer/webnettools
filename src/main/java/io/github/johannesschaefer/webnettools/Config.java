@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import io.github.johannesschaefer.webnettools.annotation.*;
 import io.github.johannesschaefer.webnettools.metadata.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.jboss.logging.Logger;
 import org.reflections.Reflections;
 
 import javax.inject.Inject;
@@ -26,9 +25,6 @@ public class Config {
     Reflections reflections;
 
     @Inject
-    Logger log;
-
-    @Inject
     @AvailableToolsQualifier
     List<String> availableTools;
 
@@ -42,7 +38,7 @@ public class Config {
                                         stream().
                                         filter(this::filterTools).
                                         map(this::toToolMD).
-                                        collect(Collectors.toList()), introText.orElseGet(()->""));
+                                        collect(Collectors.toList()), introText.orElse(""));
     }
 
     private boolean filterTools(Class<?> aToolClass) {
@@ -96,7 +92,7 @@ public class Config {
             for (var anno : f.getDeclaredAnnotations()) {
                 try {
                     String g = (String) anno.getClass().getMethod("group").invoke(anno);
-                    if(groups.stream().filter(a -> a.getName().equals(g)).count()==0) {
+                    if(groups.stream().noneMatch(a -> a.getName().equals(g))) {
                         groups.add(new GroupMD(g, ""));
                     }
                 } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {

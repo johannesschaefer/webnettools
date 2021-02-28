@@ -20,6 +20,11 @@
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <quarkus.container-image.build>true</quarkus.container-image.build>
     </properties>
+    <scm>
+        <url>https://github.com/johannesschaefer/webnettools</url>
+        <connection>scm:git:https://github.com/johannesschaefer/webnettools.git</connection>
+        <tag>HEAD</tag>
+    </scm>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -77,6 +82,11 @@
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.0-M1</version>
+            </plugin>
             <plugin>
                 <groupId>ca.szc.maven</groupId>
                 <artifactId>jsonpath-maven-plugin</artifactId>

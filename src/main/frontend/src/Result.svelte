@@ -5,6 +5,7 @@
     import { TaskStatus } from "./TaskStatus";
     import moment from "moment";
     import { slide } from "svelte/transition";
+    import { safariWorkaround } from "./SafariWorkaround";
 
     const dispatch = createEventDispatcher();
 
@@ -163,7 +164,11 @@
     </div>
 
     {#if result.active}
-        <div transition:slide={{}} on:introend={scrollToEnd}>
+        <div
+            transition:slide={{}}
+            on:introend={scrollToEnd}
+            use:safariWorkaround
+        >
             <div
                 class="card-body"
                 style="padding-top 0px; padding-bottom: 0px;"

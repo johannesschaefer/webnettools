@@ -2,6 +2,7 @@
     import Result from "./Result.svelte";
     import type { ResultTask } from "./ResultTask";
     import { slide } from "svelte/transition";
+    import { safariWorkaround } from "./SafariWorkaround";
 
     let resultList: ResultTask[] = [];
 
@@ -24,7 +25,7 @@
         <div class="">
             <div class="accordion" id="resultList">
                 {#each resultList as r (r.date)}
-                    <div in:slide={{}} out:slide={{}}>
+                    <div in:slide={{}} out:slide={{}} use:safariWorkaround>
                         <Result
                             bind:result={r}
                             on:remove={(ev) => removeResult(ev.detail)}
@@ -39,7 +40,12 @@
         </div>
     </div>
 {:else}
-    <div class="card text-muted p-2" in:slide={{}} out:slide={{}}>
+    <div
+        class="card text-muted p-2"
+        in:slide={{}}
+        out:slide={{}}
+        use:safariWorkaround
+    >
         No results available. Please start one of the tools.
     </div>
 {/if}

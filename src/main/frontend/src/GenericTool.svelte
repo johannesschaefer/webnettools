@@ -8,6 +8,7 @@
     import BooleanInput from "./inputs/BooleanInput.svelte";
     import StringInput from "./inputs/StringInput.svelte";
     import EnumInput from "./inputs/EnumInput.svelte";
+    import { safariWorkaround } from "./SafariWorkaround";
 
     export let tool: ToolMD;
     let payload = {};
@@ -135,7 +136,12 @@
             </div>
 
             {#if showOptions[group.name]}
-                <div class="row" in:slide={{}} out:slide={{}}>
+                <div
+                    class="row"
+                    in:slide={{}}
+                    out:slide={{}}
+                    use:safariWorkaround
+                >
                     {#each tool.options.filter((t) => t.group === group.name) as option}
                         <div class="d-flex flex-wrap p-2">
                             {#if option.type === "number"}

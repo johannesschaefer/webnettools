@@ -283,7 +283,7 @@
                             <executable>docker</executable>
                             <arguments>
                                 <argument>tag</argument>
-                                <argument>johannesschafer/webnettools:0.0.1-SNAPSHOT</argument>
+                                <argument>johannesschafer/webnettools:${project.version}</argument>
                                 <argument>registry.heroku.com/web-net-tools/web</argument>
                             </arguments>
                         </configuration>

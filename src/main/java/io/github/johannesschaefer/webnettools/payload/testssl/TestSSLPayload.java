@@ -6,16 +6,19 @@ import lombok.Data;
 
 @Data
 @Tool(name="testssl", displayName="Test SSL", cmd="testssl.sh", description="Check the support of SSL/TLS of any server. Uses the <a href=\"https://testssl.sh\">testssl.sh</a> tooling.")
-@Group(name="General options", description="")
+@Group(name="General options")
 @Group(name="Single checks", description="By default, testssl.sh run everything, except cipher-per-proto and grease")
-@Group(name="Tuning / connect options", description="")
-@Group(name="Output options", description="")
+@Group(name="Tuning / connect options")
+@Group(name="Output options")
 public class TestSSLPayload implements Payload {
     @MainParameter(displayName ="URL / Hostname", description="URI can be a hostname, an IPv4 or IPv6 address (restriction see below) or an URL. IPv6 addresses need to be in square brackets. For any given parameter port 443 is assumed unless specified by appending a colon and a port number. The only preceding protocol specifier allowed is https. You need to be aware that checks for an IP address might not hit the vhost you want. DNS resolution (A/AAAA record) is being performed unless you have an /etc/hosts entry for the hostname.")
     private String url;
 
     @ServerParam(param = "--add-ca", handler = TestSSLAddCaHandler.class)
     private String addCa;
+
+    @FixedParam(param = "--warnings")
+    private String warnings = "batch";
 
     @EnumParam(displayName = "Mode", param = "--mode", description = "Mass testing to be done serial (default) or parallel", group = "General options")
     private TestSSLMode mode = TestSSLMode.SERIAL;

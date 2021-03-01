@@ -163,6 +163,9 @@ public class Tools {
         if (field.getDeclaredAnnotation(EnumParam.class) != null) {
             return getParam(value, field.getDeclaredAnnotation(EnumParam.class));
         }
+        if (field.getDeclaredAnnotation(FixedParam.class) != null) {
+            return getParam(value, field.getDeclaredAnnotation(FixedParam.class));
+        }
         return Lists.newArrayList();
     }
 

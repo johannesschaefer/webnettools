@@ -8,7 +8,7 @@
 
     export function addResult(result: ResultTask) {
         resultList.forEach((r) => (r.active = false));
-        resultList = [result, ...resultList];
+        resultList = [result.clone(), ...resultList]; //[JSON.parse(JSON.stringify(result)), ...resultList];
     }
 
     export function removeResult(result: ResultTask) {

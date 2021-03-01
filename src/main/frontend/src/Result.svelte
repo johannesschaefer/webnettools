@@ -1,7 +1,7 @@
 <script lang="ts">
     import { default as AnsiUp } from "ansi_up";
     import { createEventDispatcher, onMount } from "svelte";
-    import type { ResultTask } from "./ResultTask";
+    import { ResultTask } from "./ResultTask";
     import { TaskStatus } from "./TaskStatus";
     import moment from "moment";
     import { slide } from "svelte/transition";
@@ -26,15 +26,15 @@
     }
 
     function repeat() {
-        let newResult: ResultTask = {
-            active: true,
-            date: new Date(),
-            displayText: result.displayText,
-            mode: result.mode,
-            status: TaskStatus.PREPARED,
-            url: result.url,
-            payload: result.payload,
-        };
+        let newResult: ResultTask = new ResultTask(
+            result.mode,
+            result.displayText,
+            result.url,
+            result.payload,
+            true,
+            TaskStatus.PREPARED,
+            new Date()
+        );
         dispatch("repeat", newResult);
     }
 

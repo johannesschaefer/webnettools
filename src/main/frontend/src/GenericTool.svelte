@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte";
-    import type { ResultTask } from "./ResultTask";
+    import { ResultTask } from "./ResultTask";
     import { TaskStatus } from "./TaskStatus";
     import { slide } from "svelte/transition";
     import type { GroupMD, OptionMD, ToolMD } from "./Configuration";
@@ -57,15 +57,18 @@
             tool.displayName + " " + payload[tool.main.name],
             "?config=" + encodeURIComponent(JSON.stringify(data))
         );
-        dispatch("createResult", <ResultTask>{
-            active: true,
-            displayText: tool.displayName + " " + payload[tool.main.name],
-            payload: payload,
-            url: tool.name,
-            mode: tool.name,
-            date: new Date(),
-            status: TaskStatus.PREPARED,
-        });
+        dispatch(
+            "createResult",
+            new ResultTask(
+                tool.name,
+                tool.displayName + " " + payload[tool.main.name],
+                tool.name,
+                payload,
+                true,
+                TaskStatus.PREPARED,
+                new Date()
+            )
+        );
     }
 </script>
 

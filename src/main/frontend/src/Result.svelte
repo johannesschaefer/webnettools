@@ -147,17 +147,26 @@
                     style="font-size: 2.6em; line-height: 0em; margin-left: -0.2em; margin-buttom: -0.5em;"
                     class:d-none={result.status !== TaskStatus.RUNNING &&
                         result.status !== TaskStatus.PREPARED}
+                    title="Cancel"
                 />
             {/if}
         </div>
         <div class="bd-highlight justify-content-end">
-            <button class="btn" on:click|stopPropagation={edit}>
+            <button class="btn" on:click|stopPropagation={edit} title="Edit">
                 <i class="bi bi-pencil" style="font-size: 1.3em" />
             </button>
-            <button class="btn" on:click|stopPropagation={repeat}>
+            <button
+                class="btn"
+                on:click|stopPropagation={repeat}
+                title="Repeat"
+            >
                 <i class="bi bi-arrow-repeat" style="font-size: 1.3em" />
             </button>
-            <button class="btn" on:click|stopPropagation={remove}>
+            <button
+                class="btn"
+                on:click|stopPropagation={remove}
+                title="Remove"
+            >
                 <i class="bi bi-x" style="font-size: 1.3em" />
             </button>
         </div>

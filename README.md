@@ -1,4 +1,5 @@
 # Web Net Tools
+![GitHub tag](https://img.shields.io/github/tag/johannesschaefer/webnettools.svg)
 
 Web Net Tools is a web frontend for some useful command line tooling. It provides especially an web frontend for tools like testssl.sh and nmap.
 Currently it support the following tools:

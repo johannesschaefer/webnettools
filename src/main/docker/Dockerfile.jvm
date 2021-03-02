@@ -53,5 +53,8 @@ USER 1001
 
 ENV PORT=8080
 
+HEALTHCHECK --interval=5m --timeout=3s --start-period=15s \
+  CMD curl -f http://localhost:8080/q/health/live || exit 1
+
 ENTRYPOINT [ "java" ]
 CMD [ "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.http.port=${PORT}", "-jar", "/deployments/app.jar", "-Djava.util.logging.manager=org.jboss.logmanager.LogManager" ]

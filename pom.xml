@@ -253,6 +253,7 @@
               <name>johannesschafer/webnettools:${project.version}</name>
               <build>
                 <tags>
+                  <tag>latest</tag>
                   <tag>${project.version}</tag>
                 </tags>
               </build>

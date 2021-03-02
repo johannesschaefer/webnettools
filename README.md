@@ -33,7 +33,7 @@ can help you to make such services available for easy use.
 
 Simple run the following Docker command:
 ```
-docker run -p 8080:8080 --name webnettools johannesschafer/webnettools:1.0.1
+docker run -p 8080:8080 --name webnettools johannesschafer/webnettools
 ```
 
 ## Configuration options
@@ -46,7 +46,7 @@ Currently you can configure the following aspects
 
 * To set additional certificates for the testssl.sh tool, just map the folder with the certificates to the container folder /certs. E.g.
 ```
-docker run -p 8080:8080 -v ./localfolderwithcerts:/certs --name webnettools johannesschafer/webnettools:1.0.1
+docker run -p 8080:8080 -v ./localfolderwithcerts:/certs --name webnettools johannesschafer/webnettools
 ```
 
 * Intro text - set the Docker environment variable `INTRO_TEXT` to show an additional paragraph in front of the tool selection. This can be used to help the users in your specific environment. HTML tags are supported.

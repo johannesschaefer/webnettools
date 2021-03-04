@@ -1,6 +1,6 @@
 {
   "name": "webnettools-frontend",
-  "version": "1.1.0-SNAPSHOT",
+  "version": "1.2.0-SNAPSHOT",
   "description": "Web Net Tools is a web frontend for some useful command line tooling. It provides especially an web frontend for tools like testssl.sh and nmap.",
   "license": "MIT",
   "repository": {

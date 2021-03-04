@@ -49,7 +49,7 @@ COPY target/lib/* /deployments/lib/
 COPY target/*-runner.jar /deployments/app.jar
 
 EXPOSE 8080
-USER 1001
+#USER 1001
 
 ENV PORT=8080
 

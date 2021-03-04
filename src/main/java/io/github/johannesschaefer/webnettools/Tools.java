@@ -3,6 +3,7 @@ package io.github.johannesschaefer.webnettools;
 import com.google.common.collect.Lists;
 import io.github.johannesschaefer.webnettools.annotation.*;
 import io.github.johannesschaefer.webnettools.payload.Payload;
+import org.apache.commons.io.FileUtils;
 import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
@@ -11,6 +12,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import javax.xml.bind.DatatypeConverter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -110,6 +113,27 @@ public class Tools {
                     throw new RuntimeException("Parameter " + anno.displayName() + " is longer than needed (max length: " + anno.maxLength() + ")." );
                 }
             }
+            if (f.getDeclaredAnnotation(FileParam.class) != null) {
+                if (value == null) {
+                    continue;
+                }
+                var anno = f.getDeclaredAnnotation(FileParam.class);
+                if(((String)value).length() /1.33 > anno.maxSize()) {
+                    throw new RuntimeException("Parameter " + anno.displayName() + " is larger than allowed (max size: " + anno.maxSize() + ")." );
+                }
+
+                if(((String)value).indexOf("base64,") < 0) {
+                    throw new RuntimeException("Parameter " + anno.displayName() + " is not a valid base64 encoded file." );
+                }
+                if(((String)value).indexOf("filename:") < 0) {
+                    throw new RuntimeException("Parameter " + anno.displayName() + " is not containing a filename." );
+                }
+                if(((String)value).indexOf(";data:") < 0) {
+                    throw new RuntimeException("Parameter " + anno.displayName() + " is not containing a filename." );
+                }
+
+                continue;
+            }
             if (f.getDeclaredAnnotation(NumberParam.class) != null) {
                 var anno = f.getDeclaredAnnotation(NumberParam.class);
                 if(defaultValue != null && value == null) {
@@ -143,7 +167,7 @@ public class Tools {
 
     private Collection<String> getParam(Payload payload, Field field) throws IllegalAccessException {
         if (field.getDeclaredAnnotation(ServerParam.class) != null) {
-            return getServerParam(field);
+            return getServerParam(field, payload);
         }
 
         field.setAccessible(true);
@@ -153,6 +177,9 @@ public class Tools {
         var value = field.get(payload).toString();
         if (field.getDeclaredAnnotation(BooleanParam.class) != null) {
             return getBooleanParam(value, field);
+        }
+        if (field.getDeclaredAnnotation(FileParam.class) != null) {
+            return getFileParam(value, field);
         }
         if (field.getDeclaredAnnotation(StringParam.class) != null) {
             return getParam(value, field.getDeclaredAnnotation(StringParam.class));
@@ -169,11 +196,29 @@ public class Tools {
         return Lists.newArrayList();
     }
 
-    private Collection<String> getServerParam(Field field) {
+    private Collection<String> getFileParam(String value, Field field) {
+        int posBase64 = value.indexOf("base64,");
+        int posFilename = value.indexOf("filename:");
+        int posData = value.indexOf(";data:");
+        String filename = value.substring(posFilename + 9, posData);
+        var content = DatatypeConverter.parseBase64Binary(value.substring(posBase64 + 7));
+        try {
+            var tmpFile = File.createTempFile("webnettools", filename);
+            FileUtils.writeByteArrayToFile(tmpFile, content);
+            tmpFile.deleteOnExit();
+
+            return buildReturn(field.getDeclaredAnnotation(FileParam.class).paramType(), field.getDeclaredAnnotation(FileParam.class).param(), tmpFile.getPath());
+        }
+        catch(IOException e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Collection<String> getServerParam(Field field, Payload payload) {
         try
         {
             var instance = field.getDeclaredAnnotation(ServerParam.class).handler().getDeclaredConstructor().newInstance();
-            return instance.handle(field);
+            return instance.handle(field, payload);
         }
         catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Can't handle server parameter " + field.getName(), e);

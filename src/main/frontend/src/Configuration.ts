@@ -46,3 +46,8 @@ export interface StringOptionMD extends OptionMD {
     minlength: number;
     maxlength: number;
 }
+
+export interface FileOptionMD extends OptionMD {
+    maxSize: number;
+    accept: string;
+}

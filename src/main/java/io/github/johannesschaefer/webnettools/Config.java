@@ -49,6 +49,7 @@ public class Config {
         return field.getDeclaredAnnotation(BooleanParam.class) != null ||
                field.getDeclaredAnnotation(NumberParam.class) != null ||
                field.getDeclaredAnnotation(StringParam.class) != null ||
+               field.getDeclaredAnnotation(FileParam.class) != null ||
                field.getDeclaredAnnotation(EnumParam.class) != null;
     }
 
@@ -148,6 +149,20 @@ public class Config {
                         min(paramNumberAnno.min()).
                         max(paramNumberAnno.max()).
                         step(paramNumberAnno.step()).build();
+            }
+        }
+
+        {
+            FileParam paramFileAnno = paramField.getDeclaredAnnotation(FileParam.class);
+            if (paramFileAnno != null) {
+                return FileOptionMD.builder().
+                        name(paramField.getName()).
+                        displayName(paramFileAnno.displayName()).
+                        type("file").
+                        maxSize(paramFileAnno.maxSize()).
+                        accept(paramFileAnno.accept()).
+                        description(paramFileAnno.description()).
+                        group(paramFileAnno.group()).build();
             }
         }
 

@@ -15,7 +15,12 @@
                 style="color: #495057"
             />
         </div>
-        <select class="form-control" style="width: 8em;" bind:value>
+        <select
+            class="form-control"
+            style="width: 8em;"
+            bind:value
+            id={md.name}
+        >
             <option value={null} selected disabled hidden />
             {#each Object.entries(md.values) as [value, label]}
                 <option {value}>{label}</option>

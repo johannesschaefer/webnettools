@@ -26,6 +26,7 @@
             aria-describedby={md.name}
             bind:value
             style="width: 8em;"
+            id={md.name}
         />
     </div>
 </div>

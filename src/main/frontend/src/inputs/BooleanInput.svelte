@@ -19,7 +19,12 @@
                 style="color: #495057"
             />
         </div>
-        <select class="form-control" style="width: 8em;" bind:value>
+        <select
+            class="form-control"
+            style="width: 8em;"
+            bind:value
+            id={md.name}
+        >
             <option value={null} selected disabled hidden />
             {#each values as v}
                 <option value={v.value}>{v.label}</option>

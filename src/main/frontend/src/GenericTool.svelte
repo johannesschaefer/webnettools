@@ -9,6 +9,7 @@
     import StringInput from "./inputs/StringInput.svelte";
     import EnumInput from "./inputs/EnumInput.svelte";
     import { safariWorkaround } from "./SafariWorkaround";
+    import FileInput from "./inputs/FileInput.svelte";
 
     export let tool: ToolMD;
     let payload = {};
@@ -164,6 +165,11 @@
                                 />
                             {:else if option.type === "string"}
                                 <StringInput
+                                    md={option}
+                                    bind:value={payload[option.name]}
+                                />
+                            {:else if option.type === "file"}
+                                <FileInput
                                     md={option}
                                     bind:value={payload[option.name]}
                                 />

@@ -86,4 +86,4 @@ public class DemoPayload implements Payload {
 }
 ```
 
-Please check the existing payload under /src/main/java/io/github/johannesschaefer/webnettools/payload for more examples.
+Please check the existing payload under [/src/main/java/io/github/johannesschaefer/webnettools/payload](https://github.com/johannesschaefer/webnettools/tree/main/src/main/java/io/github/johannesschaefer/webnettools/payload) for more examples.

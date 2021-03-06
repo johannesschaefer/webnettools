@@ -51,23 +51,34 @@
 
     const dispatch = createEventDispatcher();
 
-    function prepareURLData(data: any, options: OptionMD[]) {
-        let x = JSON.parse(JSON.stringify(data));
-        options.forEach((option) => {
+    function setUrlParams() {
+        let params = JSON.parse(
+            JSON.stringify({ tool: tool.name, payload: payload })
+        );
+        tool.options.forEach((option) => {
             if (option.type === "file") {
-                delete x.payload[option.name];
+                delete params.payload[option.name];
             }
         });
-        return encodeURIComponent(JSON.stringify(x));
-    }
-
-    function runTask() {
-        let data = { tool: tool.name, payload: payload };
         window.history.pushState(
             {},
             tool.displayName + " " + payload[tool.main.name],
-            "?config=" + prepareURLData(data, tool.options)
+            "?config=" + encodeURIComponent(JSON.stringify(params))
         );
+    }
+
+    function clear() {
+        let newPayload = { type: tool.name };
+        newPayload[tool.main.name] = "";
+        tool.options.forEach(
+            (o: OptionMD) => (newPayload[o.name] = o.defaultValue)
+        );
+        payload = newPayload;
+        setUrlParams();
+    }
+
+    function runTask() {
+        setUrlParams();
         dispatch(
             "createResult",
             new ResultTask(
@@ -121,6 +132,15 @@
                             id="submit-{tool.name}"
                             >Run {tool.displayName}</button
                         >
+                    </div>
+                    <div class="input-group-append">
+                        <button
+                            on:click={clear}
+                            class="btn btn-light bi bi-x"
+                            style="border-color: #ced4da; font-size: 1rem"
+                            type="button"
+                            title="Clear settings"
+                        />
                     </div>
                 </div>
             </div>

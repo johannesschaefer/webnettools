@@ -53,6 +53,18 @@ docker run -p 8080:8080 -v ./localfolderwithcerts:/certs --name webnettools joha
 * Intro text - set the Docker environment variable `INTRO_TEXT` to show an additional paragraph in front of the tool selection. This can be used to help the users in your specific environment. HTML tags are supported.
 
 ## Extension
+To build to tooling, just run `mvn clean install`. This build the backend and frontend and creates an Docker image (`johannesschafer/webnettools`).
+To run the application during development mode, please start the backend with the following command from the root folder.
+```
+mvn compile quarkus:dev
+```
+
+The frontend needs to be started from the frontend folder with the following command.
+```
+npm run dev
+```
+
+The backend listens on port 8080 and the frontend on port 5000 (and connects to the backend on port 8080). During testing, please make sure to disable CORS in your browser.
 
 To add own tools you have to create an clone or fork of this repository and create an 
 payload class for your tool. Via Java annotations to your parameter fields, all
@@ -86,5 +98,15 @@ public class DemoPayload implements Payload {
     private Color color;
 }
 ```
+
+The following parameter type are supportet.
+
+* String - simple input for strings
+* Number - simple input for number
+* Boolean - dropdown selection for true/false
+* Enum - dropdown selection for values from the given enum
+* File - file upkoad, web net tools create a temporary file with the content and passes the path to the file
+* Fixed - Fixes parameter with no choice on client side
+* Server side - Special parameter with additional control logic on the server side
 
 Please check the existing payload under [/src/main/java/io/github/johannesschaefer/webnettools/payload](https://github.com/johannesschaefer/webnettools/tree/main/src/main/java/io/github/johannesschaefer/webnettools/payload) for more examples.

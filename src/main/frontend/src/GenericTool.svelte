@@ -51,12 +51,22 @@
 
     const dispatch = createEventDispatcher();
 
+    function prepareURLData(data: any, options: OptionMD[]) {
+        let x = JSON.parse(JSON.stringify(data));
+        options.forEach((option) => {
+            if (option.type === "file") {
+                delete x.payload[option.name];
+            }
+        });
+        return encodeURIComponent(JSON.stringify(x));
+    }
+
     function runTask() {
         let data = { tool: tool.name, payload: payload };
         window.history.pushState(
             {},
             tool.displayName + " " + payload[tool.main.name],
-            "?config=" + encodeURIComponent(JSON.stringify(data))
+            "?config=" + prepareURLData(data, tool.options)
         );
         dispatch(
             "createResult",

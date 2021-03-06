@@ -39,7 +39,7 @@
                 style="color: #495057"
             />
         </div>
-        <div class="custom-file" style="width: 8em;">
+        <div class="custom-file" style="width: 19.3em;">
             <input
                 type="file"
                 class="custom-file-input"

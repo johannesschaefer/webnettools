@@ -3,7 +3,7 @@
     import { ResultTask } from "./ResultTask";
     import { TaskStatus } from "./TaskStatus";
     import { slide } from "svelte/transition";
-    import type { GroupMD, OptionMD, ToolMD } from "./Configuration";
+    import type { OptionMD, ToolMD } from "./Configuration";
     import NumberInput from "./inputs/NumberInput.svelte";
     import BooleanInput from "./inputs/BooleanInput.svelte";
     import StringInput from "./inputs/StringInput.svelte";

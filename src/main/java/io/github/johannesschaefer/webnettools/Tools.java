@@ -6,6 +6,7 @@ import io.github.johannesschaefer.webnettools.payload.Payload;
 import org.apache.commons.io.FileUtils;
 import org.jboss.logging.Logger;
 
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -215,14 +216,7 @@ public class Tools {
     }
 
     private Collection<String> getServerParam(Field field, Payload payload) {
-        try
-        {
-            var instance = field.getDeclaredAnnotation(ServerParam.class).handler().getDeclaredConstructor().newInstance();
-            return instance.handle(field, payload);
-        }
-        catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Can't handle server parameter " + field.getName(), e);
-        }
+        return CDI.current().select(field.getDeclaredAnnotation(ServerParam.class).handler()).get().handle(field, payload);
     }
 
     private Collection<String> getBooleanParam(String value, Field field) {

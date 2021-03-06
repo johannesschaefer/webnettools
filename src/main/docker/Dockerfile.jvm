@@ -42,6 +42,7 @@ ENV PATH=/testssl.sh:$PATH
 
 ENV AVAILABLE_TOOLS=testssl,ping,traceroute,nmap
 ENV RATE_LIMIT=1
+ENV CA_DIR=/certs
 
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"

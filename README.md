@@ -96,16 +96,26 @@ public class DemoPayload implements Payload {
 
     @EnumParam(displayName = "color", param = "--color", description="color selection")
     private Color color;
+
+    @FileParam(displayName = "file", param = "--file-ca", accept = "*.abc", description = "File upload" )
+    private String file;
+    
+    @ServerParam(param = "--optionXXX", handler = XXXHandler.class)
+    private String xxx;
+    
+    @FixedParam(param = "--warnings")
+    private String warnings = "off";
 }
 ```
 
-The following parameter type are supportet.
+The following parameter type are supported.
 
+* Main parameter - string value used for the main input panel
 * String - simple input for strings
 * Number - simple input for number
 * Boolean - dropdown selection for true/false
-* Enum - dropdown selection for values from the given enum
-* File - file upkoad, web net tools create a temporary file with the content and passes the path to the file
+* Enum - dropdown selection for values from the given enum, the enum should have the final parameter value as toString result. See examples in [testssl payload](https://github.com/johannesschaefer/webnettools/tree/main/src/main/java/io/github/johannesschaefer/webnettools/payload/testssl/).
+* File - file upload, web net tools create a temporary file with the content and passes the path to the file
 * Fixed - Fixes parameter with no choice on client side
 * Server side - Special parameter with additional control logic on the server side
 

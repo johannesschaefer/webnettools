@@ -13,7 +13,8 @@ RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certi
     && chmod "g+rwX" /deployments \
     && chown 1001:root /deployments \
     && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security \
-    && git clone --depth 1 https://github.com/drwetter/testssl.sh.git
+    && git clone --depth 1 https://github.com/drwetter/testssl.sh.git \
+    && setcap cap_net_raw+eip /usr/bin/nmap
 
 ENV PATH=/testssl.sh:$PATH
 
@@ -27,7 +28,7 @@ COPY target/lib/* /deployments/lib/
 COPY target/*-runner.jar /deployments/app.jar
 
 EXPOSE 8080
-#USER 1001
+USER 1001
 
 ENV PORT=8080
 

@@ -22,11 +22,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 @Path("/tools/")
 public class Tools {
+    List<Class> STANDARD_PARAMETER_CLASSES = Lists.newArrayList(BooleanParam.class, StringParam.class, NumberParam.class, EnumParam.class, FixedParam.class);
+
     @Inject
     Logger log;
 
@@ -176,23 +179,13 @@ public class Tools {
             return Lists.newArrayList();
         }
         var value = field.get(payload).toString();
-        if (field.getDeclaredAnnotation(BooleanParam.class) != null) {
-            return getBooleanParam(value, field);
-        }
         if (field.getDeclaredAnnotation(FileParam.class) != null) {
             return getFileParam(value, field);
         }
-        if (field.getDeclaredAnnotation(StringParam.class) != null) {
-            return getParam(value, field.getDeclaredAnnotation(StringParam.class));
-        }
-        if (field.getDeclaredAnnotation(NumberParam.class) != null) {
-            return getParam(value, field.getDeclaredAnnotation(NumberParam.class));
-        }
-        if (field.getDeclaredAnnotation(EnumParam.class) != null) {
-            return getParam(value, field.getDeclaredAnnotation(EnumParam.class));
-        }
-        if (field.getDeclaredAnnotation(FixedParam.class) != null) {
-            return getParam(value, field.getDeclaredAnnotation(FixedParam.class));
+
+        var anno = Arrays.stream(field.getDeclaredAnnotations()).filter(f->STANDARD_PARAMETER_CLASSES.contains(f.annotationType())).findFirst();
+        if (anno.isPresent()) {
+            return getParam(value, anno.get());
         }
         return Lists.newArrayList();
     }
@@ -219,27 +212,6 @@ public class Tools {
         return CDI.current().select(field.getDeclaredAnnotation(ServerParam.class).handler()).get().handle(field, payload);
     }
 
-    private Collection<String> getBooleanParam(String value, Field field) {
-        BooleanParam anno = field.getDeclaredAnnotation(BooleanParam.class);
-        switch(anno.paramType()) {
-            case SPACE:
-                return Lists.newArrayList(anno.param(), value);
-            case EQUALS:
-                return Lists.newArrayList(anno.param()+"="+ value);
-            case ONLY_PARAM:
-                if (Boolean.parseBoolean(value)) {
-                    return Lists.newArrayList(anno.param());
-                }
-                else {
-                    return Lists.newArrayList();
-                }
-            case ONLY_VALUE:
-                return Lists.newArrayList(value);
-            default:
-                throw new RuntimeException("Unsupported paramType " + anno.paramType());
-        }
-    }
-
     private Collection<String> getParam(String value, Annotation anno) {
         try {
             String paramStr = (String) anno.getClass().getMethod("param").invoke(anno);
@@ -259,6 +231,13 @@ public class Tools {
                 return Lists.newArrayList(paramStr+"="+ value);
             case ONLY_VALUE:
                 return Lists.newArrayList(value);
+            case ONLY_PARAM:
+                if (Boolean.parseBoolean(value)) {
+                    return Lists.newArrayList(paramStr);
+                }
+                else {
+                    return Lists.newArrayList();
+                }
             default:
                 throw new RuntimeException("Unsupported paramType " + pType);
         }
@@ -281,7 +260,7 @@ public class Tools {
         return Response.ok((StreamingOutput) outputStream -> copyStream(process.getInputStream(), outputStream)).build();
     }
 
-    void copyStream(InputStream source, OutputStream target) throws IOException {
+    private void copyStream(InputStream source, OutputStream target) throws IOException {
         byte[] buf = new byte[8];
         int length;
         while ((length = source.read(buf)) > 0) {

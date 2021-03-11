@@ -3,7 +3,6 @@ package io.github.johannesschaefer.webnettools.filter.ratelimit;
 import io.github.johannesschaefer.webnettools.payload.Payload;
 import io.vertx.core.http.HttpServerRequest;
 import org.apache.commons.io.IOUtils;
-import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
@@ -20,8 +19,6 @@ import java.util.Map;
 
 @Provider
 public class RateLimitFilter implements ContainerRequestFilter {
-    private static final Logger LOG = Logger.getLogger(RateLimitFilter.class);
-
     @Inject
     @RateLimitCacheQualifier
     Map<String, Boolean> rateLimitCache;
@@ -69,7 +66,7 @@ public class RateLimitFilter implements ContainerRequestFilter {
     private String getCacheValue(ContainerRequestContext request) {
         try {
             String json = IOUtils.toString(request.getEntityStream(), StandardCharsets.UTF_8);
-            InputStream in = IOUtils.toInputStream(json);
+            InputStream in = IOUtils.toInputStream(json, StandardCharsets.UTF_8);
             request.setEntityStream(in);
 
             Payload payload = jsonb.fromJson(json, Payload.class);

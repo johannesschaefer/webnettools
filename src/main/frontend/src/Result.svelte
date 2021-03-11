@@ -76,7 +76,7 @@
             }
             if (!response.ok) {
                 result.status = TaskStatus.ERROR;
-                var div = document.createElement("div"); // TODO: improve me
+                var div = document.createElement("div");
                 div.innerHTML = await response.text();
                 if (div.innerHTML === "") {
                     div.innerHTML = response.status + " " + response.statusText;

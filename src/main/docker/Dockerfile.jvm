@@ -5,6 +5,7 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 # Install java and the run-java script
 # Also set up permissions for user `1001`
 RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certificates tar git nmap ${JAVA_PACKAGE} \
+    && curl https://bintray.com/ookla/rhel/rpm -o bintray-ookla-rhel.repo && mv bintray-ookla-rhel.repo /etc/yum.repos.d/ && microdnf install speedtest \
     && microdnf update \
     && microdnf clean all \
     && rpm -i https://rpmfind.net/linux/centos/8-stream/BaseOS/x86_64/os/Packages/traceroute-2.1.0-6.el8.x86_64.rpm \
@@ -15,10 +16,18 @@ RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certi
     && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security \
     && git clone --depth 1 https://github.com/drwetter/testssl.sh.git \
     && setcap cap_net_raw+eip /usr/bin/nmap
+     #\
+    #&& mkdir -p /root/.config/ookla \
+   # && echo -e "{\n" \
+   #      "     \"Settings\": {\n" \
+   #      "         \"LicenseAccepted\": \"604ec27f828456331ebf441826292c49276bd3c1bee1a2f65a6452f505c4061c\",\n" \
+   #      "         \"GDPRTimeStamp\": 1615738481\n" \
+   #      "     }\n" \
+   #      "}\n" > /root/.config/ookla/speedtest-cli.json
 
 ENV PATH=/testssl.sh:$PATH
 
-ENV AVAILABLE_TOOLS=testssl,ping,traceroute,nmap
+ENV AVAILABLE_TOOLS=testssl,ping,traceroute,nmap,speedtest
 ENV RATE_LIMIT=1
 ENV CA_DIR=/certs
 

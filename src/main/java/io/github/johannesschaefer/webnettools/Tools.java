@@ -67,6 +67,9 @@ public class Tools {
 
     private ArrayList<String> getMain(Payload payload) throws IllegalAccessException {
         Field mainField = getMainField(payload.getClass());
+        if (mainField == null) {
+            return Lists.newArrayList();
+        }
         mainField.setAccessible(true);
         return Lists.newArrayList(mainField.get(payload).toString());
     }
@@ -251,7 +254,7 @@ public class Tools {
                 return f;
             }
         }
-        throw new RuntimeException("no main field declared");
+        return null;
     }
 
     private Response getStreamResponse(List<String> cmd) throws IOException {

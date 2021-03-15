@@ -9,6 +9,7 @@ Currently it support the following tools:
 * Ping
 * Traceroute
 * [Nmap](https://nmap.org)
+* [Speedtest](https://www.speedtest.net/apps/cli)
 
 <p align="center">
   <img align="center" style="display: inline" src="docs/testssl.png" alt="test ssl tooling" height="400" />
@@ -120,3 +121,5 @@ The following parameter type are supported.
 * Server side - Special parameter with additional control logic on the server side
 
 Please check the existing payload under [/src/main/java/io/github/johannesschaefer/webnettools/payload](https://github.com/johannesschaefer/webnettools/tree/main/src/main/java/io/github/johannesschaefer/webnettools/payload) for more examples.
+
+To make the tool available, please enter the name of the tool in the [Dockerfile](https://github.com/johannesschaefer/webnettools/tree/main/src/main/docker/Dockerfile.jvm) (`ENV AVAILABLE_TOOLS`, used as default for the Docker image) and in the Java file [Producer](https://github.com/johannesschaefer/webnettools/tree/main/src/main/java/io/github/johannesschaefer/webnettools/Producer.java) (ConfigProperty `availableTools`, used at development time).

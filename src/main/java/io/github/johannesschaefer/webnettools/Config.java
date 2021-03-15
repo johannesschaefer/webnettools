@@ -75,7 +75,7 @@ public class Config {
 
         List<GroupMD> groups = getGroups(toolClass);
 
-        return new ToolMD(toolAnno.name(), toolAnno.displayName(), toolAnno.description(), mainParam.get(), options, groups);
+        return new ToolMD(toolAnno.name(), toolAnno.displayName(), toolAnno.description(), mainParam.orElseGet(()->null), options, groups);
     }
 
     private List<GroupMD> getGroups(Class<?> toolClass) {

@@ -22,7 +22,9 @@
     let inputField;
 
     onMount(async () => {
-        inputField.focus();
+        if (inputField) {
+            inputField.focus();
+        }
     });
 
     function setPayload(pp: any) {
@@ -40,7 +42,9 @@
         }
 
         let newPayload = { type: newTool.name };
-        newPayload[newTool.main.name] = "";
+        if (newTool.main) {
+            newPayload[newTool.main.name] = "";
+        }
         newTool.options.forEach(
             (o: OptionMD) => (newPayload[o.name] = o.defaultValue)
         );
@@ -60,16 +64,22 @@
                 delete params.payload[option.name];
             }
         });
+        let dn = tool.displayName;
+        if (tool.main) {
+            dn += " " + payload[tool.main.name];
+        }
         window.history.pushState(
             {},
-            tool.displayName + " " + payload[tool.main.name],
+            dn,
             "?config=" + encodeURIComponent(JSON.stringify(params))
         );
     }
 
     function clear() {
         let newPayload = { type: tool.name };
-        newPayload[tool.main.name] = "";
+        if (tool.main) {
+            newPayload[tool.main.name] = "";
+        }
         tool.options.forEach(
             (o: OptionMD) => (newPayload[o.name] = o.defaultValue)
         );
@@ -79,11 +89,15 @@
 
     function runTask() {
         setUrlParams();
+        let dn = tool.displayName;
+        if (tool.main) {
+            dn += " " + payload[tool.main.name];
+        }
         dispatch(
             "createResult",
             new ResultTask(
                 tool.name,
-                tool.displayName + " " + payload[tool.main.name],
+                dn,
                 tool.name,
                 payload,
                 true,
@@ -101,48 +115,60 @@
         </p>
         <form
             on:submit|preventDefault={() =>
-                payload[tool.main.name] !== "" ? runTask() : null}
+                tool.main === undefined || payload[tool.main.name] !== ""
+                    ? runTask()
+                    : null}
         >
             <div class="row">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span
-                            title={tool.main.description}
-                            class="input-group-text bi bi-question-circle"
-                            id="{tool.name}-main"
+                {#if tool.main}
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span
+                                title={tool.main.description}
+                                class="input-group-text bi bi-question-circle"
+                                id="{tool.name}-main"
+                            />
+                        </div>
+                        <input
+                            bind:value={payload[tool.main.name]}
+                            bind:this={inputField}
+                            minlength={tool.main.minlength}
+                            maxlength={tool.main.maxlength}
+                            type="text"
+                            class="form-control"
+                            placeholder={tool.main.displayName}
                         />
+                        <div class="input-group-append">
+                            <button
+                                disabled={payload[tool.main.name] === ""}
+                                class:disabled={payload[tool.main.name] === ""}
+                                on:click={runTask}
+                                on:submit={runTask}
+                                class="btn btn-primary"
+                                type="button"
+                                id="submit-{tool.name}"
+                                >Run {tool.displayName}</button
+                            >
+                        </div>
+                        <div class="input-group-append">
+                            <button
+                                on:click={clear}
+                                class="btn btn-light bi bi-x"
+                                style="border-color: #ced4da; font-size: 1rem"
+                                type="button"
+                                title="Clear settings"
+                            />
+                        </div>
                     </div>
-                    <input
-                        bind:value={payload[tool.main.name]}
-                        bind:this={inputField}
-                        minlength={tool.main.minlength}
-                        maxlength={tool.main.maxlength}
-                        type="text"
-                        class="form-control"
-                        placeholder={tool.main.displayName}
-                    />
-                    <div class="input-group-append">
-                        <button
-                            disabled={payload[tool.main.name] === ""}
-                            class:disabled={payload[tool.main.name] === ""}
-                            on:click={runTask}
-                            on:submit={runTask}
-                            class="btn btn-primary"
-                            type="button"
-                            id="submit-{tool.name}"
-                            >Run {tool.displayName}</button
-                        >
-                    </div>
-                    <div class="input-group-append">
-                        <button
-                            on:click={clear}
-                            class="btn btn-light bi bi-x"
-                            style="border-color: #ced4da; font-size: 1rem"
-                            type="button"
-                            title="Clear settings"
-                        />
-                    </div>
-                </div>
+                {:else}
+                    <button
+                        on:click={runTask}
+                        on:submit={runTask}
+                        class="btn btn-primary"
+                        type="button"
+                        id="submit-{tool.name}">Run {tool.displayName}</button
+                    >
+                {/if}
             </div>
         </form>
         {#each tool.groups as group}

@@ -9,7 +9,6 @@ Currently it support the following tools:
 * Ping
 * Traceroute
 * [Nmap](https://nmap.org)
-* [Speedtest](https://www.speedtest.net/apps/cli)
 
 <p align="center">
   <img align="center" style="display: inline" src="docs/testssl.png" alt="test ssl tooling" height="400" />

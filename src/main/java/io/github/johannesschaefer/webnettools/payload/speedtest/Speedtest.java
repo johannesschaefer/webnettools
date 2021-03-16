@@ -5,6 +5,7 @@ import io.github.johannesschaefer.webnettools.payload.Payload;
 import lombok.Data;
 
 @Data
+/*
 @Tool(name="speedtest", displayName="Speedtest", cmd="speedtest", description="<a href=\"https://www.speedtest.net/apps/cli\">Speedtest</a> by Ookla is the official command line client for testing the speed and performance of your internet connection.</br></br>You may only use this Speedtest software and information generated " +
         "from it for personal, non-commercial use, through a command line " +
         "interface on a personal computer. Your use of this software is subject " +
@@ -24,7 +25,7 @@ import lombok.Data;
         "shared, where the data may be transferred and Ookla's contact details," +
         "please see our Privacy Policy at:</br>" +
         "</br>" +
-        "<a href=\"http://www.speedtest.net/privacy\">Privacy</a>")
+        "<a href=\"http://www.speedtest.net/privacy\">Privacy</a>")*/
 public class Speedtest implements Payload {
     @FixedParam(param = "--progress", paramType = ParameterType.EQUALS)
     private String privileged = "no";

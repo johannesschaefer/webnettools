@@ -22,7 +22,9 @@ public class PayloadDeserializer implements JsonbDeserializer<Payload> {
     public PayloadDeserializer(Reflections reflections) {
         var payloadTypes = reflections.getSubTypesOf(Payload.class);
         for (Class<? extends Payload> p : payloadTypes) {
-            tools.put(p.getDeclaredAnnotation(Tool.class).name(), p);
+            if (p.getDeclaredAnnotation(Tool.class) != null) {
+                tools.put(p.getDeclaredAnnotation(Tool.class).name(), p);
+            }
         }
     }
 

@@ -9,6 +9,8 @@ Currently it support the following tools:
 * Ping
 * Traceroute
 * [Nmap](https://nmap.org)
+* Dig
+* [MTR](https://www.bitwizard.nl/mtr/)
 
 <p align="center">
   <img align="center" style="display: inline" src="docs/testssl.png" alt="test ssl tooling" height="400" />

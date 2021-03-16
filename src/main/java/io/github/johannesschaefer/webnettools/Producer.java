@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 import java.util.List;
 
 public class Producer {
-    @ConfigProperty(name = "AVAILABLE_TOOLS", defaultValue = "testssl,ping,traceroute,nmap,demo")
+    @ConfigProperty(name = "AVAILABLE_TOOLS", defaultValue = "testssl,ping,traceroute,nmap,demo,dig,mtr")
     List<String> availableTools;
 
     @Singleton

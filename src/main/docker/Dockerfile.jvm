@@ -9,6 +9,7 @@ RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certi
     && microdnf update \
     && microdnf clean all \
     && rpm -i https://rpmfind.net/linux/centos/8-stream/BaseOS/x86_64/os/Packages/traceroute-2.1.0-6.el8.x86_64.rpm \
+    && rpm -i http://mirror.centos.org/centos/8/BaseOS/x86_64/os/Packages/mtr-0.92-3.el8.x86_64.rpm \
     && mkdir /deployments \
     && chown 1001 /deployments \
     && chmod "g+rwX" /deployments \
@@ -27,7 +28,7 @@ RUN microdnf install util-linux procps bind-utils hostname iputils curl ca-certi
 
 ENV PATH=/testssl.sh:$PATH
 
-ENV AVAILABLE_TOOLS=testssl,ping,traceroute,nmap
+ENV AVAILABLE_TOOLS=testssl,ping,traceroute,nmap,dig,mtr
 ENV RATE_LIMIT=1
 ENV CA_DIR=/certs
 

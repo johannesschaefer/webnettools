@@ -55,7 +55,7 @@ docker run -p 8080:8080 -v ./localfolderwithcerts:/certs --name webnettools joha
 * Intro text - set the Docker environment variable `INTRO_TEXT` to show an additional paragraph in front of the tool selection. This can be used to help the users in your specific environment. HTML tags are supported.
 
 ## Extension
-To build to tooling, just run `mvn clean install`. This build the backend and frontend and creates an Docker image (`johannesschafer/webnettools`).
+To build the tooling, just run `mvn clean install`. This builds the backend and frontend and creates an Docker image (`johannesschafer/webnettools`).
 To run the application during development mode, please start the backend with the following command from the root folder.
 ```
 mvn compile quarkus:dev

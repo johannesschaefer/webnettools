@@ -19,11 +19,6 @@ Currently it support the following tools:
 
 Web Net Tools is a ready to use Docker image. No additional setup of the mentioned tools is needed.
 
-## Demo
-
-A live demo is available under https://web-net-tools.herokuapp.com.
-The demo has a rate limit for each tool to avoid abuse of it.   
-
 ## Main usage
 
 This tool was made to make command line tools available in closed networks.
